@@ -81,3 +81,125 @@ test.describe("Theme", () => {
     await expect(page.locator("thead").locator("th")).toHaveCount(5);
   });
 });
+
+test.describe("Theme css editor", () => {
+  const highlightSize = (page, name) =>
+    page.evaluate((key) => CSS.highlights.get(key)?.size ?? 0, name);
+
+  test.beforeEach(async ({ page }) => {
+    await beforeEachTest(page);
+    await loginTest(page);
+    await fulfillDataRoute(page, "**/themes*", themesJson);
+    await page.getByRole("link", { name: "Temaer", exact: true }).click();
+    await page.getByText("Opret nyt tema").click();
+  });
+
+  test("It highlights valid nested css without problems", async ({ page }) => {
+    await page
+      .getByLabel("Temaets CSS")
+      .fill("#SLIDE_ID {\n  .text { color: red; }\n}");
+
+    await expect.poll(() => highlightSize(page, "css-editor-property")).toBe(1);
+    expect(await highlightSize(page, "css-editor-error")).toBe(0);
+    await expect(page.locator(".css-editor__diagnostic")).toHaveCount(0);
+  });
+
+  test("It lists and underlines a problem and selects it on click", async ({
+    page,
+  }) => {
+    const css = page.getByLabel("Temaets CSS");
+    await css.fill("#SLIDE_ID { color: red; }\n/* x");
+
+    const problem = page.locator(".css-editor__diagnostic");
+    await expect(problem).toHaveCount(1);
+    await expect(problem).toContainText("Kommentaren er ikke lukket");
+    expect(await highlightSize(page, "css-editor-error")).toBe(1);
+    await expect(css).toHaveAttribute("aria-invalid", "true");
+
+    await problem.getByRole("button", { name: "Linje 2" }).click();
+    await expect(css).toBeFocused();
+    expect(await css.evaluate((el) => el.selectionStart)).toBe(26);
+  });
+
+  test("It scrolls the field to a problem far down when clicked", async ({
+    page,
+  }) => {
+    const css = page.getByLabel("Temaets CSS");
+    const rules = Array.from(
+      { length: 60 },
+      (_, i) => `#SLIDE_ID .r${i} { color: red; }`,
+    ).join("\n");
+    await css.fill(`${rules}\nh2 { margin: 0 }`);
+    await css.evaluate((el) => {
+      el.scrollTop = 0;
+    });
+
+    await page.getByRole("button", { name: "Linje 61" }).click();
+
+    // Line 61 is inside the visible part of the field, and the gutter and
+    // highlight mirror scrolled with it.
+    const { lineTop, scrollTop, clientHeight, gutter, mirror } =
+      await css.evaluate((el) => ({
+        lineTop: 60 * parseFloat(getComputedStyle(el).lineHeight),
+        scrollTop: el.scrollTop,
+        clientHeight: el.clientHeight,
+        gutter: document.querySelector(".css-editor__gutter").scrollTop,
+        mirror: document.querySelector(".css-editor__mirror").scrollTop,
+      }));
+    expect(lineTop).toBeGreaterThanOrEqual(scrollTop);
+    expect(lineTop).toBeLessThan(scrollTop + clientHeight);
+    expect(gutter).toBe(scrollTop);
+    expect(mirror).toBe(scrollTop);
+  });
+
+  test("It keeps problems in view above the save bar while typing", async ({
+    page,
+  }) => {
+    const css = page.getByLabel("Temaets CSS");
+    await css.click();
+    await css.pressSequentially("h2 { margin: 0 }");
+
+    const panel = page.locator(".css-editor__diagnostics");
+    await expect(panel).toContainText("Linje 1");
+    const panelBox = await panel.boundingBox();
+    const footerBox = await page.locator(".sticky-footer").boundingBox();
+    expect(panelBox.y).toBeGreaterThanOrEqual(0);
+    expect(panelBox.y + panelBox.height).toBeLessThanOrEqual(footerBox.y + 1);
+  });
+
+  test("It warns about a selector without #SLIDE_ID", async ({ page }) => {
+    await page.getByLabel("Temaets CSS").fill("h1 { color: red; }");
+
+    await expect(page.locator(".css-editor__diagnostic")).toContainText(
+      'Selektoren "h1" gælder hele skærmen',
+    );
+    expect(await highlightSize(page, "css-editor-warning")).toBe(1);
+  });
+
+  test("It still saves with problems and shows the api error", async ({
+    page,
+  }) => {
+    await fulfillDataRoute(
+      page,
+      "**/themes",
+      {
+        "@type": "ConstraintViolationList",
+        "hydra:title": "An error occurred",
+        "hydra:description":
+          'css: The css has a comment that is not closed: add "*/" after "/* x".',
+      },
+      422,
+    );
+    await page.getByLabel("Temaets CSS").fill("/* x");
+    await expect(page.locator(".css-editor__diagnostic")).toHaveCount(1);
+
+    await page.locator("#save_theme").click();
+
+    await expect(
+      page
+        .locator(".Toastify__toast--error")
+        .getByText(/comment that is not closed/)
+        .first(),
+    ).toBeVisible();
+  });
+});

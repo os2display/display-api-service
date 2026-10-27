@@ -22,7 +22,6 @@ function ListButton({
   dataKey = "",
 }) {
   const { setModal } = useModal();
-  const [label, setLabel] = useState("");
   const [getData, setGetData] = useState(false);
 
   let data;
@@ -38,24 +37,10 @@ function ListButton({
     );
   }
 
-  useEffect(() => {
-    if (Array.isArray(displayData)) {
-      setLabel(`${displayData.length}`);
-    }
-    return () => {
-      setLabel("");
-    };
-  }, []);
-
-  /** Set label. */
-  useEffect(() => {
-    if (data?.data) {
-      setLabel(data.data["hydra:totalItems"].toString());
-    }
-    return () => {
-      setLabel("");
-    };
-  }, [data]);
+  // Derived on every render, so a refetched list shows the new count.
+  const label = Array.isArray(displayData)
+    ? `${displayData.length}`
+    : (data?.data?.["hydra:totalItems"]?.toString() ?? "");
 
   useEffect(() => {
     const timeout = setTimeout(() => {

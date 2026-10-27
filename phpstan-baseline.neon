@@ -1129,6 +1129,12 @@ parameters:
 			path: src/Entity/Tenant/Slide.php
 
 		-
+			message: '#^Property App\\Entity\\Tenant\\Slide\:\:\$content type mapping mismatch\: database can contain null but property expects array\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Tenant/Slide.php
+
+		-
 			message: '#^Property App\\Entity\\Tenant\\Slide\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1143,6 +1149,12 @@ parameters:
 		-
 			message: '#^Property App\\Entity\\Tenant\\Slide\:\:\$templateOptions type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Slide.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Slide\:\:\$templateOptions type mapping mismatch\: database can contain null but property expects array\.$#'
+			identifier: doctrine.columnType
 			count: 1
 			path: src/Entity/Tenant/Slide.php
 
@@ -1331,12 +1343,6 @@ parameters:
 			identifier: missingType.generics
 			count: 1
 			path: src/EventListener/FeedSourceDoctrineEventListener.php
-
-		-
-			message: '#^Method App\\EventListener\\MediaDoctrineEventListener\:\:postPersist\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/EventListener/MediaDoctrineEventListener.php
 
 		-
 			message: '#^Method App\\EventListener\\MediaDoctrineEventListener\:\:preRemove\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'

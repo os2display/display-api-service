@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, lazy } from "react";
 import { I18nextProvider } from "react-i18next";
 import { Routes, Route, Navigate } from "react-router-dom";
 import i18next from "i18next";
@@ -26,8 +26,6 @@ import SlideEdit from "./components/slide/slide-edit";
 import SlideCreate from "./components/slide/slide-create";
 import MediaCreate from "./components/media/media-create";
 import ThemesList from "./components/themes/themes-list";
-import ThemeCreate from "./components/themes/theme-create";
-import ThemeEdit from "./components/themes/theme-edit";
 import UserContext from "./context/user-context";
 import ListContext from "./context/list-context";
 import SharedPlaylists from "./components/playlist/shared-playlists";
@@ -45,6 +43,10 @@ import FeedSourceCreate from "./components/feed-sources/feed-source-create";
 import FeedSourceEdit from "./components/feed-sources/feed-source-edit";
 import "react-toastify/dist/ReactToastify.css";
 import "./app.scss";
+
+// The theme form's css editor brings a css parser; load it only when needed.
+const ThemeCreate = lazy(() => import("./components/themes/theme-create"));
+const ThemeEdit = lazy(() => import("./components/themes/theme-edit"));
 
 /**
  * App component.

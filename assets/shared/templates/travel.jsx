@@ -5,6 +5,7 @@ import { IntlProvider, FormattedMessage } from "react-intl";
 import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import {
   getFirstMediaUrlFromField,
+  hasText,
   ThemeStyles,
 } from "../slide-utils/slide-util.jsx";
 import da from "./travel/lang/da.json";
@@ -87,13 +88,22 @@ function Travel({
   const [iframeSrc, setIframeSrc] = useState("");
 
   // Rich text input sanitized
-  const sanitizedtext = text ? parse(DOMPurify.sanitize(text, {})) : "";
+  const sanitizedtext = hasText(text)
+    ? parse(DOMPurify.sanitize(text, {}))
+    : "";
+
+  const { feedData } = slide;
+
+  // Stations come from the Rejseplanen feed. Slides created before the feed
+  // existed keep their stations in content.station.
+  const stations =
+    Array.isArray(feedData) && feedData.length > 0 ? feedData : station;
 
   const getStationIds = () => {
-    if (!(station instanceof Array) || station.length === 0) {
+    if (!Array.isArray(stations) || stations.length === 0) {
       return "";
     }
-    return station.map(({ id }) => id).join("@");
+    return stations.map(({ id }) => id).join("@");
   };
 
   const imageStyle = {};
@@ -136,7 +146,7 @@ function Travel({
     setIframeSrc(
       `https://webapp.rejseplanen.dk/bin/help.exe/mn?${urlSearchParams}`,
     );
-  }, [busOrTram]);
+  }, [busOrTram, feedData, station]);
 
   // Imports language strings
   useEffect(() => {

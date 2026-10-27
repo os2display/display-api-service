@@ -30,6 +30,12 @@ framework:
             calendar.api.cache:
                 adapter: app.cache.adapter
 
+            # Creates a "rejseplanen.cache" service ($rejseplanenCache)
+            rejseplanen.cache:
+                adapter: app.cache.adapter
+                # Default expire set to 1 day
+                default_lifetime: 86400
+
             # Creates a "auth.screen.cache" service
             auth.screen.cache:
                 adapter: app.cache.adapter

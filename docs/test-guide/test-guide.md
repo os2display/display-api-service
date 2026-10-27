@@ -183,14 +183,17 @@ This guide assumes that all templates from have been added to the installation.
   * See that the expected events are shown in the slide.
 * "Rejseplanen" (expected result [rejseplanen.png](./assets/rejseplanen.png))
   * `Use Case: Show which public transportation is available from a given location with rejseplanen.dk.`
-  * NB! This guide assumes that the admin has been configured with a valid rejseplanen api key.
+  * NB! This guide assumes that `ADMIN_REJSEPLANEN_APIKEY` is set to a valid rejseplanen api key and that a
+    feed source of type "Rejseplanen" has been created for the selected tenant.
   * NB! The part that displays departures is an iframe from rejseplanen from the stops selected.
   * Navigate to `/admin/slide/create`.
   * Fill "Slidets navn".
   * Select "Rejseplanen" from "Vælg en skabelon til dit slide".
   * Fill the different text fields.
   * Add a map of how to get to the stop.
-  * Find a stop with "Vælg stoppested".
+  * Select the Rejseplanen data source under "Vælg stoppesteder" and find a stop with "Vælg stoppested".
+  * Check in the browser's network tab that the search goes to `/v2/feed-sources/.../config/stations`, not to
+    rejseplanen.dk.
   * Fill "Antal afgange der skal vises" and "Er det valgte stoppested bus eller letbane".
   * Save the slide.
   * See that the slide displays the expected content.
@@ -439,6 +442,9 @@ the screen is running the full screen layout.
   * Save the campaign.
   * Test that the campaign applies/does not apply to SCREEN_1 according to the campaign period select.
     * See T1 for setting up the screen SCREEN_1.
+    * NB! Expect up to `CLIENT_PULL_STRATEGY_INTERVAL` (default 10 minutes) before the screen enters campaign
+      mode, and the same delay — showing the fallback image — after the period ends. Set the interval to e.g.
+      30000 in `.env.local` and reload the client for manual testing.
 * Screen group
   * Create a screen group (GROUP_1) under "Grupper" (`/admin/group/list`).
   * Create a new screen (SCREEN_2)

@@ -18,6 +18,12 @@
 # IDE / editor state
 /.idea
 /.vscode
+.DS_Store
+
+# Local tooling and agent state (git worktrees can be gigabytes)
+/.worktrees
+/.claude
+/.playwright-mcp
 
 # Compose / task runner / dev tooling configs (not consumed at runtime)
 /docker-compose*.yml

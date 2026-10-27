@@ -286,6 +286,9 @@
     "brnd-feed-type": {
       "title": "BRND"
     },
+    "rejseplanen-feed-type": {
+      "title": "Rejseplanen"
+    },
     "dynamic-fields": {
       "notified-feed-type": {
         "title": "Notified",
@@ -434,9 +437,24 @@
     "theme-description-label": "Temaets beskrivelse",
     "css-header": "Temaets CSS",
     "theme-css-label": "Temaets CSS",
+    "theme-css-help": "Start hver selektor med #SLIDE_ID, fx \"#SLIDE_ID h1 { color: red; }\". På skærmen erstattes #SLIDE_ID med slidets id, så stylingen kun gælder slidet og ikke resten af skærmen.",
     "save-button": "Gem tema og luk",
     "save-without-close-button": "Gem tema",
     "cancel-button": "Annuller"
+  },
+  "css-editor": {
+    "line": "Linje {{line}}",
+    "error": "Fejl",
+    "warning": "Advarsel",
+    "unterminated_comment": "Kommentaren er ikke lukket: tilføj \"*/\".",
+    "unterminated_string": "Teksten i anførselstegn er ikke lukket.",
+    "unexpected_brace": "Der er en \"}\" uden en tilhørende \"{\".",
+    "unclosed_brace": "Denne \"{\" bliver aldrig lukket med en \"}\".",
+    "problem-count": "Antal problemer i css: {{count}}",
+    "missing_colon": "Der mangler \":\" efter \"{{property}}\".",
+    "missing_semicolon": "Der mangler \";\" efter værdien af \"{{property}}\".",
+    "syntax": "Syntaksfejl ved \"{{text}}\".",
+    "unscoped": "Selektoren \"{{selector}}\" gælder hele skærmen, ikke kun slidet: tilføj #SLIDE_ID."
   },
   "group-form": {
     "save-button": "Gem gruppen",
@@ -959,7 +977,8 @@
     "all-selected": "Alle er valgt",
     "clear-selection": "Ryd valg",
     "selected-all": "Vælg alle",
-    "select-some-options": "Vælg..."
+    "select-some-options": "Vælg...",
+    "no-feed-sources": "Der er ingen datakilder til denne skabelon. En administrator skal oprette en datakilde, før slidet kan sættes op."
   },
   "login": {
     "missing-tenants": "Denne bruger er ugyldig, da den ikke er tilnyttet noget område",
@@ -1075,7 +1094,22 @@
     "error-fetching": "Der opstod en fejl da konfigurationsmulighederne skulle hentes. Datakilden er måske forkert konfigureret."
   },
   "station-selector": {
-    "get-error": "Der var en fejl da vi skulle hente stoppested fra rejseplanen"
+    "get-error": "Der var en fejl da vi skulle hente stoppested fra rejseplanen",
+    "type-to-search": "Skriv for at søge efter stoppesteder",
+    "no-results": "Ingen stoppesteder fundet",
+    "searching": "Søger efter stoppesteder…",
+    "search-placeholder": "Søg efter stoppested, fx Aarhus H",
+    "nothing-selected": "Søg efter stoppesteder"
+  },
+  "legacy-station-notice": {
+    "heading": "Dette slide bruger en udfaset stoppestedsvælger",
+    "description": "Stoppestederne på dette slide er valgt med den gamle stoppestedsvælger, som ikke længere kan redigeres. Slidet viser fortsat disse stoppesteder:",
+    "how-to-upgrade": "Sådan opgraderer du slidet:",
+    "step-create-feed-source": "En administrator opretter en datakilde af typen \"Rejseplanen\" (skal kun gøres én gang).",
+    "create-feed-source-link": "Opret datakilde",
+    "step-select-stations": "Vælg datakilden og stoppestederne under \"Vælg stoppesteder\" på dette slide.",
+    "step-save": "Gem slidet.",
+    "until-upgraded": "Indtil da vises de gamle stoppesteder. Når der er valgt stoppesteder i datakilden, bruges de i stedet."
   },
   "screen-gantt-chart": {
     "show-gantt": "Vis en visualisering af planlægningen"
@@ -1228,10 +1262,10 @@
     "toggle-italic": "Kursiv",
     "toggle-strike-through": "Gennemstreget",
     "toggle-underline": "Understreget",
+    "toggle-blockquote": "Citat",
     "toggle-heading-1": "Overskrift 1",
     "toggle-heading-2": "Overskrift 2",
     "toggle-heading-3": "Overskrift 3",
-    "toggle-heading-4": "Overskrift 4",
     "normal": "Normal",
     "toggle-bullet-list": "Punktopstilling",
     "toggle-ordered-list": "Nummereret liste",

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ImageMagick security policy for the API image.
+
+  ImageMagick only processes uploaded media for thumbnails, so it may read and
+  write the allowed raster upload formats and nothing else. That blocks the
+  readers known to be abused through crafted uploads (SVG, MVG, MSL, TEXT,
+  URL/HTTP, PS/PDF, ...), external delegate programs, and "@file" indirect
+  reads. Resource limits are set with MAGICK_*_LIMIT env vars in the
+  Dockerfile, so operators can tune them; see README.md.
+
+  Keep the allowed modules in sync with the image types in
+  src/Validator/MediaFile.php.
+-->
+<policymap>
+  <policy domain="delegate" rights="none" pattern="*"/>
+  <policy domain="module" rights="none" pattern="*"/>
+  <policy domain="module" rights="read|write" pattern="{GIF,JPEG,PNG,WEBP}"/>
+  <!-- Coders built into the core library, such as URL/HTTP(S), are not
+       modules, so the module rules above do not stop them. -->
+  <policy domain="coder" rights="none" pattern="*"/>
+  <policy domain="coder" rights="read|write" pattern="{GIF,JPEG,JPG,PNG,WEBP}"/>
+  <policy domain="path" rights="none" pattern="@*"/>
+</policymap>
