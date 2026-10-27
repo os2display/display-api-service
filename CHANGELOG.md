@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Ran a full `composer update` (79 packages), taking `composer audit` from five advisories to the two
+  `api-platform/core` ones that have no 3.x fix; `api-platform/core` stays on the latest 3.x, 3.4.17.
+  `guzzlehttp/guzzle` moves to 8.x as a dependency of `league/oauth2-client`. Applied the two refactors
+  the updated Rector proposes and baselined the Slide JSON column nullability mismatch the updated
+  `phpstan-doctrine` now reports.
 - Switched the docker compose setup and the nginx Dockerfile from the archived
   `nginxinc/nginx-unprivileged` image to the maintained `nginx/nginx-unprivileged` (#629).
 - Merged fixes from 2.7.1–2.8.2 into release/3.0.0.
