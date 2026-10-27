@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [3.0.0-rc11] - 2026-10-27
+
 - Ran a full `composer update` (79 packages), taking `composer audit` from five advisories to the two
   `api-platform/core` ones that have no 3.x fix; `api-platform/core` stays on the latest 3.x, 3.4.17.
   `guzzlehttp/guzzle` moves to 8.x as a dependency of `league/oauth2-client`. Applied the two refactors
