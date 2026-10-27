@@ -33,7 +33,7 @@ exceptions to the path definitions may be approved by the OS2Display
 coordination group, subject to confirmation by the OS2Display steering group.
 
 Lists of templates and feeds that are considered part of core is maintained in the
-OS2display governace repository. 
+OS2display governace repository.
 
 - [core-templates](https://github.com/os2display/os2display-produktforvaltning/blob/main/dokumenter/core-templates.md)
 - [core-feeds](https://github.com/os2display/os2display-produktforvaltning/blob/main/dokumenter/core-feeds.md)
