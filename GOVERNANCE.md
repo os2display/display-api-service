@@ -34,7 +34,7 @@ Main responsibilities:
 
 ### Coordination Group (Koordinationsgruppe)
 
-The Coordination Group are responsible for decisions regarding dayly operation and delivery management.
+The Coordination Group are responsible for decisions regarding daily operation and delivery management.
 It translates needs into actionable priorities and works closely with
 providers and contributors.
 
