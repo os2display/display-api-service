@@ -73,7 +73,7 @@ code, the build code and technical documentation.
 
 ### Operations Provider
 
-Hosts OS2Display installations for public-sector organizations or is a public-sector self-hosting organization
+Hosts OS2Display installations for public-sector organizations or is a public-sector self-hosting organization.
 Solely funded by their customers.
 
 Responsibilities:
