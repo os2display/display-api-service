@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Added ADRs 012 and 013 defining governance boundaries, contribution requirements, and
+  maintenance expectations for core and plugin-like zones.
+
 ## [3.0.0-rc11] - 2026-10-27
 
 - Ran a full `composer update` (79 packages), taking `composer audit` from five advisories to the two
