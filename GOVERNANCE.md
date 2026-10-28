@@ -50,7 +50,7 @@ Main responsibilities:
 
 Responsibilities:
 
-- Manage dayly operation and delivery pipeline
+- Manage daily operation and delivery pipeline
 - Facilitate collaboration and communication in the community.
 - Single point of contact for providers.
 - Can be contacted at <os2display@os2.eu>.
