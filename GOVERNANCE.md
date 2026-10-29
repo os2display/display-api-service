@@ -156,6 +156,7 @@ The Maintenance Provider is responsible for:
 - Monitoring repository automation and maintaining required CI checks.
 - Merging approved contributions and resolving related issues in line with the agreed workflow.
 - Managing releases, including release tags and the repository changelog.
+- Assisting Product Management in replying to issues when requested.
 
 ## Links to further reading
 
