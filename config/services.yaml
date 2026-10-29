@@ -156,6 +156,11 @@ services:
         arguments:
             $feedLogger: '@monolog.logger.feed'
 
+    App\Feed\RejseplanenFeedType:
+        arguments:
+            $feedLogger: '@monolog.logger.feed'
+            $apiKey: '%env(string:ADMIN_REJSEPLANEN_APIKEY)%'
+
     # Answers 503 (instead of a generic 500 / false 401) on server-side
     # outages; logs the reclassification on the matching channel.
     App\EventSubscriber\DatabaseUnavailableExceptionSubscriber:
@@ -165,6 +170,10 @@ services:
     App\EventSubscriber\JwtKeyMisconfigurationSubscriber:
         arguments:
             $authLogger: '@monolog.logger.auth'
+
+    App\EventSubscriber\ImageFilterFailureSubscriber:
+        arguments:
+            $mediaLogger: '@monolog.logger.media'
 
     # Logs DB connection-establishment failures on the `database` channel.
     # The explicit doctrine.middleware tag is required: doctrine-bundle collects
@@ -184,7 +193,6 @@ services:
 
     App\Controller\Admin\AdminConfigController:
         arguments:
-            $rejseplanenApiKey: '%env(ADMIN_REJSEPLANEN_APIKEY)%'
             $touchButtonRegions: '%env(bool:ADMIN_TOUCH_BUTTON_REGIONS)%'
             $showScreenStatus: '%env(bool:ADMIN_SHOW_SCREEN_STATUS)%'
             $loginMethods: '%env(json:ADMIN_LOGIN_METHODS)%'
@@ -195,6 +203,7 @@ services:
     App\Validator\MediaFileValidator:
         arguments:
             $mediaMaxUploadSizeMb: '%env(int:MEDIA_MAX_UPLOAD_SIZE_MB)%'
+            $mediaMaxUploadPixels: '%env(int:MEDIA_MAX_UPLOAD_PIXELS)%'
 
     App\Controller\Client\ClientConfigController:
         arguments:
@@ -513,9 +522,3 @@ services:
         tags: ['api_platform.filter']
         arguments:
             $properties: { isCampaign: 'isCampaign' }
-
-when@test:
-    services:
-        # Service loaded in AbstractBaseApiTestCase::setUp() must be public.
-        App\Utils\IriHelperUtils:
-            public: true

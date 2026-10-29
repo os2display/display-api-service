@@ -50,8 +50,20 @@ class MediaController extends AbstractController
             throw new ValidationException($violations);
         }
 
-        // Note that the extra information about the uploaded file is added in the MediaDoctrineEventListener because
-        // the file does not exist on disk before this point.
+        // Read the metadata from the uploaded temp file, so the single flush persists it.
+        $path = $uploadedFile->getPathname();
+        $info = getimagesize($path);
+
+        $media->setMimeType(mime_content_type($path));
+
+        if (false !== $info) {
+            $media->setWidth($info[0]);
+            $media->setHeight($info[1]);
+        }
+
+        $media->setSize(filesize($path));
+        $media->setSha(sha1_file($path));
+
         return $media;
     }
 

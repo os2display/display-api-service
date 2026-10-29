@@ -1,0 +1,79 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\EventSubscriber;
+
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
+
+/**
+ * Logs failed image filter requests on the `media` channel (ADR 011).
+ *
+ * Liip generates filtered images on the first request to its resolve routes
+ * and turns a failure into an uncaught exception, which otherwise only reaches
+ * the generic request log without the filter or source path. Matching on the
+ * route covers every filter set and image format. A client error (4xx), such
+ * as a source image that cannot be found, is logged at `warning`; anything
+ * else, such as the driver (ImageMagick) failing or hitting a resource limit,
+ * at `error`. A screen variant that fails that way redirects to the original
+ * image.
+ */
+class ImageFilterFailureSubscriber implements EventSubscriberInterface
+{
+    private const array ROUTES = ['liip_imagine_filter', 'liip_imagine_filter_runtime'];
+
+    public function __construct(
+        private readonly LoggerInterface $mediaLogger,
+    ) {}
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::EXCEPTION => 'onKernelException',
+        ];
+    }
+
+    public function onKernelException(ExceptionEvent $event): void
+    {
+        $request = $event->getRequest();
+
+        if (!\in_array($request->attributes->get('_route'), self::ROUTES, true)) {
+            return;
+        }
+
+        $throwable = $event->getThrowable();
+        $filter = (string) $request->attributes->get('filter');
+        $path = (string) $request->attributes->get('path');
+        // A 4xx is the request's fault and anyone can trigger one (a missing
+        // source, an unknown filter, a bad signed-url hash).
+        $clientError = $throwable instanceof HttpExceptionInterface && $throwable->getStatusCode() < 500;
+
+        $this->mediaLogger->log($clientError ? 'warning' : 'error', 'Image filter failed', [
+            'event' => 'media.image_filter_failed',
+            'image.filter' => $filter,
+            'file.path' => $path,
+            'exception' => $throwable,
+        ]);
+
+        // A failed screen variant redirects to the original image, so whatever
+        // requested the variant (screen client, admin preview, /template) shows
+        // the original instead of nothing: templates use the variant as a CSS
+        // background, which has no error event to fall back on. The API output
+        // is unchanged; assets.variants still lists the variant URL. The
+        // redirect is cached for an hour, so a browser retries the failing
+        // resize at most hourly. The target is absolute, like assets.uri, so
+        // a path starting with \ (which browsers read as /) cannot make it
+        // protocol-relative.
+        if (!$clientError && str_starts_with($filter, 'screen_')) {
+            $response = new RedirectResponse($request->getSchemeAndHttpHost().$request->getBasePath().'/'.ltrim($path, '/'));
+            $response->setPublic();
+            $response->setMaxAge(3600);
+            $event->setResponse($response);
+        }
+    }
+}

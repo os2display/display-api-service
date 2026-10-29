@@ -5,14 +5,91 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - Improved project documentation on governance, contribution workflows, security reporting, and contributor acknowledgements.
+- Added ADRs 012 and 013 defining governance boundaries, contribution requirements, and
+  maintenance expectations for core and plugin-like zones.
+
+## [3.0.0-rc11] - 2026-10-27
+
+- Ran a full `composer update` (79 packages), taking `composer audit` from five advisories to the two
+  `api-platform/core` ones that have no 3.x fix; `api-platform/core` stays on the latest 3.x, 3.4.17.
+  `guzzlehttp/guzzle` moves to 8.x as a dependency of `league/oauth2-client`. Applied the two refactors
+  the updated Rector proposes and baselined the Slide JSON column nullability mismatch the updated
+  `phpstan-doctrine` now reports.
+- Switched the docker compose setup and the nginx Dockerfile from the archived
+  `nginxinc/nginx-unprivileged` image to the maintained `nginx/nginx-unprivileged` (#629).
+- Merged fixes from 2.7.1–2.8.2 into release/3.0.0.
+- Fixed the Rejseplanen API key being readable by anyone through the public `/config/admin` endpoint
+  (#361). Station search for the travel template now runs server-side through the new
+  `RejseplanenFeedType`, so each tenant needs a Rejseplanen feed source. Existing travel slides keep
+  rendering; the admin shows a notice on them explaining how to upgrade.
+- Added test-only flush and checksum calculator probes, and characterization tests pinning the flush
+  count, calculator runs and transaction nesting level of each relation write endpoint (#281).
+- Fixed the API test suite running out of memory at the phpfpm container's 256M limit.
+  `phpunit.xml.dist` now sets `memory_limit` to 1G for test runs; the app keeps 256M.
 - Fixed the playlist preview not showing saved changes until the page was reloaded (#573).
+- Fixed a failed media delete removing the media's cached thumbnails. They are now removed only once
+  the media is deleted. Deleting a theme's logo is refused with 409, as for media on slides, instead of
+  failing with 500 (#568).
+- Fixed list counts, such as a slide's playlists, showing the count from before a save until the page
+  was reloaded (#570). "Gem og luk" on a slide now waits for its playlists to be saved, and stays open
+  with the error if that fails.
+- Fixed thumbnails failing for large images: images are now resized with ImageMagick (`imagick`, now a
+  required PHP extension) instead of gd, and failures are logged on the `media` channel. Uploaded
+  images are limited to `MEDIA_MAX_UPLOAD_PIXELS` (default 50 megapixels). WebP uploads are allowed.
+  SVG thumbnails are the original file, and the image's ImageMagick policy only allows the upload
+  formats.
+- Screens show scaled image variants (1920, 3840 or 7680 pixels on the long edge) instead of the
+  original upload, picking the smallest that covers the screen. Media lists them in the new optional
+  `assets.variants`; `assets.uri` is unchanged (#589).
 - Fixed the video template background rendering white instead of black. Themes set it with
   `--video-background-color` (#571).
 - Fixed the delete button on a screen list row not deleting the screen (#569).
+- Fixed the rich text editor having no way back to normal text from a heading, and added quotes as
+  in v2 (#590). Headings are limited to levels 1–3, as in v2, and templates no longer show an empty
+  text box for a cleared text field.
+- Fixed every flush running the relations checksum propagation, including flushes that change nothing
+  in the checksum tree such as the screen heartbeat with `TRACK_SCREEN_INFO=true` (#584).
+- Fixed an Event Database feed whose item is gone writing to the database on every screen's feed
+  fetch. The slide is unpublished once, and the feed then returns no data until the next cache
+  expiry instead of being retried every 30 seconds (#585).
+- Fixed `POST /v2/media` flushing twice: the media metadata is now set before the flush, so the
+  upload commits once and runs the checksum calculator once, outside a transaction (#281).
+- Fixed a theme with an unterminated `/*` comment hanging the client on every slide using it. The
+  comment now runs to the end of the theme, as it would in a stylesheet (#572).
+- Fixed the screen client rewriting a slide's theme styles on every render and leaking memory in
+  styled-components for each render. Theme css is now applied as written in a plain `<style>`:
+  nesting is the browser's native css nesting, and invalid declarations are ignored, as in a
+  browser, instead of being repaired.
+- Saving a theme now rejects css with an unterminated comment, which could hang every screen showing
+  the theme, or an unterminated string or unbalanced braces, which break the theme's own rules. A
+  theme's css can now also be cleared with `"css": ""`; a `PUT` without `css` keeps it, as before.
+- The theme css field in the admin now highlights the css and lists problems while typing: the
+  checks the API enforces, syntax errors, and selectors without `#SLIDE_ID`.
 - Updated Symfony AI Mate to 0.14. Mate is now a CLI rather than an MCP server, so the
   `symfony-ai-mate` MCP entry is removed and agents run `docker compose exec -T phpfpm vendor/bin/mate`.
 - Fixed the Claude Code php-cs-fixer hook reformatting files the project config excludes, such as the
   generated `mate/extensions.php`: explicit paths overrode the finder's exclusions.
+- Changed the API image build to build the admin and client assets once on the build machine's
+  platform instead of under emulation for each target platform.
+- Fixed local image builds copying git worktrees, Claude Code and Playwright MCP state into the image.
+- Fixed the screen and screen group campaign API tests passing with the same screen linked twice.
+  They now link two distinct screens and also cover replacing and clearing links and links across
+  tenants.
+- Added unit tests for the screen client entering campaign mode from a screen or screen group
+  campaign, leaving it when the campaign expires, and keeping normal content when the campaigns
+  cannot be loaded.
+- Documented that campaigns start and end on the client's data pull, up to
+  `CLIENT_PULL_STRATEGY_INTERVAL` (default 10 minutes, 30 seconds in 2.x) late, in `UPGRADE.md`, the
+  test guide and `docs/client-scheduling.md`.
+- Added a client test pinning that a playlist, such as a campaign's, leaves the screen on the next
+  scheduling tick once its `published.to` has passed.
+- Added Playwright tests for saving a campaign in the admin: the selected screens are bound to the
+  campaign, and a campaign without a publish end date is not saved.
+
+## [3.0.0-rc10] - 2026-10-21
+
+- Rebuilt the images on PHP 8.4.27 for [CVE-2026-109618](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w)
+  (critical, RCE via OOM corruption).
 
 ## [3.0.0-rc9] - 2026-09-09
 

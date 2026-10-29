@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
+use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Tenant;
 use App\Entity\Tenant\Media;
+use App\Entity\Tenant\Theme;
 use App\Tests\AbstractBaseApiTestCase;
+use App\Tests\Probe\CalculatorProbe;
+use Doctrine\ORM\Events;
+use Liip\ImagineBundle\Model\Binary;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Storage\StorageInterface;
 
 class MediaTest extends AbstractBaseApiTestCase
 {
@@ -100,7 +106,10 @@ class MediaTest extends AbstractBaseApiTestCase
         file_put_contents($tmpFile, file_get_contents('fixtures/files/test.jpg'));
         $file = new UploadedFile($tmpFile, 'test.jpg');
 
-        $response = $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+        $client = $this->getAuthenticatedClient();
+        $calculatorProbe = static::getContainer()->get(CalculatorProbe::class);
+        $calculatorProbe->reset();
+        $response = $client->request('POST', '/v2/media', [
             'extra' => [
                 'parameters' => [
                     'title' => 'Test media',
@@ -117,6 +126,8 @@ class MediaTest extends AbstractBaseApiTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
+        // One flush, so one calculator run outside a transaction.
+        $this->assertSame(1, $calculatorProbe->invocations());
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
@@ -162,6 +173,192 @@ class MediaTest extends AbstractBaseApiTestCase
         //        $this->assertMatchesResourceItemJsonSchema(Media::class);
     }
 
+    public function testMediaUploadAcceptsWebp(): void
+    {
+        $image = new \Imagick();
+        $image->newImage(1280, 800, 'white');
+        $image->setImageFormat('webp');
+        $tmpFile = stream_get_meta_data(tmpfile())['uri'];
+        $image->writeImage($tmpFile);
+
+        $file = new UploadedFile($tmpFile, 'test.webp');
+
+        $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+            'extra' => [
+                'parameters' => [
+                    'title' => 'WebP media',
+                    'description' => 'A WebP upload',
+                    'license' => 'Free CC',
+                ],
+                'files' => [
+                    'file' => $file,
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'multipart/form-data',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'assets' => [
+                'type' => 'image/webp',
+                'dimensions' => [
+                    'height' => 800,
+                    'width' => 1280,
+                ],
+            ],
+        ]);
+    }
+
+    public function testSvgThumbnailIsTheOriginal(): void
+    {
+        // SVGs never go through ImageMagick: an SVG can reference files and
+        // URLs that its readers would fetch. Browsers render SVG in <img>
+        // without scripts or external loads.
+        $tmpFile = stream_get_meta_data(tmpfile())['uri'];
+        file_put_contents($tmpFile, '<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" width="40" height="30"><rect width="40" height="30"/></svg>');
+
+        $file = new UploadedFile($tmpFile, 'test.svg');
+
+        $response = $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+            'extra' => [
+                'parameters' => [
+                    'title' => 'SVG media',
+                    'description' => 'An SVG upload',
+                    'license' => 'Free CC',
+                ],
+                'files' => [
+                    'file' => $file,
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'multipart/form-data',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $media = $response->toArray();
+        $this->assertSame('image/svg+xml', $media['assets']['type']);
+        $this->assertSame($media['assets']['uri'], $media['thumbnail']);
+    }
+
+    public function testImageListsScreenVariantsSmallerThanTheOriginal(): void
+    {
+        // Under the test env's 2 MP upload limit, with a long edge between the
+        // 1920 and 3840 variants. 799 × 1920/2401 = 638.9, rounded like Liip.
+        $media = $this->uploadImage(2401, 799, 'jpeg');
+
+        $this->assertSame(['1920'], array_map(strval(...), array_keys($media['assets']['variants'])));
+        $variant = $media['assets']['variants']['1920'];
+        $this->assertSame(1920, $variant['width']);
+        $this->assertSame(639, $variant['height']);
+        $this->assertStringContainsString('/media/cache/resolve/screen_1920/', $variant['uri']);
+    }
+
+    public function testSmallImageHasNoScreenVariants(): void
+    {
+        $media = $this->uploadImage(1920, 1000, 'png');
+
+        $this->assertArrayNotHasKey('variants', $media['assets']);
+    }
+
+    public function testImageWithAnUnknownDimensionHasNoScreenVariants(): void
+    {
+        // Variant dimensions divide by the original's; a row with one of them
+        // unknown (0) must not fail the whole response.
+        $media = $this->uploadImage(2401, 799, 'jpeg');
+
+        $manager = static::getContainer()->get('doctrine')->getManager();
+        $entity = $manager->getRepository(Media::class)->find(basename((string) $media['@id']));
+        $this->assertInstanceOf(Media::class, $entity);
+        $entity->setHeight(0);
+        $manager->flush();
+
+        $response = $this->getAuthenticatedClient()->request('GET', $media['@id']);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertArrayNotHasKey('variants', $response->toArray()['assets']);
+    }
+
+    public function testGifHasNoScreenVariants(): void
+    {
+        // Animated GIF frames are not resized reliably; screens get the original.
+        $media = $this->uploadImage(2400, 800, 'gif');
+
+        $this->assertArrayNotHasKey('variants', $media['assets']);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function uploadImage(int $width, int $height, string $format): array
+    {
+        $image = new \Imagick();
+        $image->newImage($width, $height, 'white');
+        $image->setImageFormat($format);
+        $tmpFile = stream_get_meta_data(tmpfile())['uri'];
+        $image->writeImage($tmpFile);
+
+        $response = $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+            'extra' => [
+                'parameters' => [
+                    'title' => 'Image media',
+                    'description' => 'An image upload',
+                    'license' => 'Free CC',
+                ],
+                'files' => [
+                    'file' => new UploadedFile($tmpFile, 'test.'.$format),
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'multipart/form-data',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+
+        return $response->toArray();
+    }
+
+    public function testMediaUploadNonImage(): void
+    {
+        $content = '<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"></svg>';
+        $tmpFile = stream_get_meta_data(tmpfile())['uri'];
+        file_put_contents($tmpFile, $content);
+        $file = new UploadedFile($tmpFile, 'test.svg');
+
+        $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+            'extra' => [
+                'parameters' => [
+                    'title' => 'Test svg',
+                    'description' => 'This is a test svg upload',
+                    'license' => 'Free CC',
+                ],
+                'files' => [
+                    'file' => $file,
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'multipart/form-data',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        // getimagesize() does not read SVG, so dimensions stay 0.
+        $this->assertJsonContains([
+            'assets' => [
+                'type' => 'image/svg+xml',
+                'dimensions' => [
+                    'height' => 0,
+                    'width' => 0,
+                ],
+                'sha' => sha1($content),
+                'size' => strlen($content),
+            ],
+        ]);
+    }
+
     public function testMediaUploadRejectedWhenTooLarge(): void
     {
         // Driven by the MEDIA_MAX_UPLOAD_SIZE_MB env var via the `#[MediaFile]`
@@ -203,5 +400,158 @@ class MediaTest extends AbstractBaseApiTestCase
         ]);
 
         $this->assertResponseStatusCodeSame(422);
+    }
+
+    public function testMediaUploadRejectedWhenTooManyPixels(): void
+    {
+        // Driven by MEDIA_MAX_UPLOAD_PIXELS, lowered in .env.test so a small,
+        // well-compressed image can exceed it.
+        $maxPixels = (int) ($_ENV['MEDIA_MAX_UPLOAD_PIXELS'] ?? 50000000);
+        if ($maxPixels > 4000000) {
+            $this->markTestSkipped(sprintf(
+                'MEDIA_MAX_UPLOAD_PIXELS=%d is too large to test cheaply; set it to 2000000 in .env.test to enable this test.',
+                $maxPixels,
+            ));
+        }
+
+        $width = 2000;
+        $height = intdiv($maxPixels, $width) + 1;
+        $tmpFile = stream_get_meta_data(tmpfile())['uri'];
+        $image = new \Imagick();
+        $image->newImage($width, $height, 'black');
+        $image->setImageFormat('jpeg');
+        $image->writeImage($tmpFile);
+
+        $file = new UploadedFile($tmpFile, 'too-many-pixels.jpg');
+
+        $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+            'extra' => [
+                'parameters' => [
+                    'title' => 'Too many pixels',
+                    'description' => 'Exceeds configured max upload pixels',
+                    'license' => 'Free CC',
+                ],
+                'files' => [
+                    'file' => $file,
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'multipart/form-data',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(422);
+    }
+
+    public function testDeleteMedia(): void
+    {
+        [$client, $media, $path] = $this->mediaWithCachedThumbnail(onSlides: false);
+        $id = $media->getId();
+
+        $client->request('DELETE', '/v2/media/'.$id);
+
+        $this->assertResponseStatusCodeSame(204);
+        $this->assertNull(static::getContainer()->get('doctrine')->getRepository(Media::class)->find($id));
+        $this->assertFalse(static::getContainer()->get('liip_imagine.cache.manager')->isStored($path, 'thumbnail'));
+    }
+
+    public function testDeleteMediaOnSlidesIsRefused(): void
+    {
+        [$client, $media, $path] = $this->mediaWithCachedThumbnail(onSlides: true);
+
+        $client->request('DELETE', '/v2/media/'.$media->getId());
+
+        $this->assertResponseStatusCodeSame(409);
+        $this->assertTrue(static::getContainer()->get('liip_imagine.cache.manager')->isStored($path, 'thumbnail'));
+    }
+
+    public function testDeleteThemeLogoIsRefused(): void
+    {
+        [$client, $media, $path] = $this->mediaWithCachedThumbnail(onSlides: false);
+        $id = $media->getId();
+
+        // The theme.logo_id foreign key would fail the delete in the flush (#568).
+        $manager = static::getContainer()->get('doctrine')->getManager();
+        $theme = $manager->getRepository(Theme::class)->findOneBy(['tenant' => $this->tenant]);
+        $theme->setLogo($media);
+        $manager->flush();
+
+        $client->request('DELETE', '/v2/media/'.$id);
+
+        $this->assertResponseStatusCodeSame(409);
+        $manager->clear();
+        $this->assertNotNull($manager->getRepository(Media::class)->find($id));
+        $this->assertTrue(static::getContainer()->get('liip_imagine.cache.manager')->isStored($path, 'thumbnail'));
+    }
+
+    public function testFailedDeleteKeepsCachedImages(): void
+    {
+        [$client, $media, $path] = $this->mediaWithCachedThumbnail(onSlides: false);
+
+        // Fail the flush that would delete the row, after preRemove (#568).
+        static::getContainer()->get('doctrine')->getManager()->getEventManager()->addEventListener(
+            Events::onFlush,
+            new class {
+                public function onFlush(): never
+                {
+                    throw new \RuntimeException('Flush failed');
+                }
+            },
+        );
+
+        $client->request('DELETE', '/v2/media/'.$media->getId());
+
+        $this->assertResponseStatusCodeSame(500);
+        $this->assertTrue(static::getContainer()->get('liip_imagine.cache.manager')->isStored($path, 'thumbnail'));
+    }
+
+    public function testDeleteMediaWithoutFileKeepsOtherCachedImages(): void
+    {
+        [$client, $media, $path] = $this->mediaWithCachedThumbnail(onSlides: false);
+
+        // file_path is nullable, and CacheManager::remove(null) clears the whole cache.
+        $manager = static::getContainer()->get('doctrine')->getManager();
+        $logos = array_map(fn (Theme $theme) => $theme->getLogo(), $manager->getRepository(Theme::class)->findAll());
+        $withoutFile = array_values(array_filter(
+            $manager->getRepository(Media::class)->findBy(['tenant' => $this->tenant]),
+            fn (Media $other) => $other !== $media && 0 === count($other->getSlides()) && !in_array($other, $logos, true),
+        ))[0];
+        $withoutFile->setFilePath(null);
+        $manager->flush();
+
+        $client->request('DELETE', '/v2/media/'.$withoutFile->getId());
+
+        $this->assertResponseStatusCodeSame(204);
+        $this->assertTrue(static::getContainer()->get('liip_imagine.cache.manager')->isStored($path, 'thumbnail'));
+    }
+
+    /**
+     * A fixture media, on slides or not and no theme's logo, with a thumbnail
+     * in the image cache.
+     *
+     * The client keeps the kernel, so the media and listeners set up here are
+     * the ones the request sees.
+     *
+     * @return array{Client, Media, string} The client, the media and its path in the image cache
+     */
+    private function mediaWithCachedThumbnail(bool $onSlides): array
+    {
+        $client = $this->getAuthenticatedClient();
+        $client->disableReboot();
+
+        $doctrine = static::getContainer()->get('doctrine');
+        $logos = array_map(fn (Theme $theme) => $theme->getLogo(), $doctrine->getRepository(Theme::class)->findAll());
+        $medias = $doctrine->getRepository(Media::class)->findBy(['tenant' => $this->tenant]);
+        $media = array_values(array_filter(
+            $medias,
+            fn (Media $media) => $onSlides === count($media->getSlides()) > 0 && !in_array($media, $logos, true),
+        ))[0];
+
+        $path = static::getContainer()->get(StorageInterface::class)->resolveUri($media, 'file');
+        $cacheManager = static::getContainer()->get('liip_imagine.cache.manager');
+        $cacheManager->store(new Binary(file_get_contents('fixtures/files/test.jpg'), 'image/jpeg', 'jpg'), $path, 'thumbnail');
+        $this->assertTrue($cacheManager->isStored($path, 'thumbnail'));
+
+        return [$client, $media, $path];
     }
 }

@@ -5,7 +5,7 @@ import Contacts from "./contacts/contacts";
 import RichText from "../../util/forms/rich-text/rich-text";
 import FormTable from "../../util/forms/form-table/form-table";
 import FileSelector from "./file-selector";
-import StationSelector from "./station/station-selector";
+import LegacyStationNotice from "./station/legacy-station-notice";
 import RadioButtons from "../../util/forms/radio-buttons";
 import CheckboxOptions from "../../util/forms/checkbox-options";
 
@@ -19,6 +19,7 @@ import CheckboxOptions from "../../util/forms/checkbox-options";
  * @param {object} props.formStateObject - The form state.
  * @param {Function} props.onFileChange - When file has changed call this function.
  * @param {object} props.mediaData - Array of loaded media entities.
+ * @param {object} props.slide - The slide being edited.
  * @returns {object} Content form element.
  */
 function ContentForm({
@@ -28,6 +29,7 @@ function ContentForm({
   errors = [],
   onChange = null,
   mediaData = {},
+  slide = null,
 }) {
   const getInputFiles = (field) => {
     const inputFiles = [];
@@ -129,16 +131,13 @@ function ContentForm({
 
         break;
       case "travel-plan":
+        // Stations are chosen through the Rejseplanen feed now; this
+        // only tells editors that the slide still uses the old stations.
         returnElement = (
-          <StationSelector
-            name={formData.name}
-            type={formData.type}
-            errors={formData.required ? errors : null}
-            label={formData.label}
-            helpText={formData.helpText}
-            value={formStateObject[formData.name]}
+          <LegacyStationNotice
+            stations={formStateObject[formData.name]}
+            feedStations={slide?.feed?.configuration?.stations}
             onChange={onChange}
-            formGroupClasses={formData.formGroupClasses}
           />
         );
 

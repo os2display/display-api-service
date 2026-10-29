@@ -1,37 +1,49 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import MultiSelectComponent from "../../../util/forms/multiselect-dropdown/multi-dropdown";
 import { displayError } from "../../../util/list/toast-component/display-toast";
-import userContext from "../../../../context/user-context";
+import { getHeaders } from "../poster/poster-helper";
+
+const SEARCH_DEBOUNCE_MS = 300;
 
 /**
- * A multiselect and table for groups.
+ * A multiselect for Rejseplanen stations.
  *
- * @param {string} props The props.
+ * Searches through the feed source config endpoint, so the Rejseplanen API
+ * key stays on the server.
+ *
+ * @param {object} props The props.
  * @param {string} props.name The name for the input
+ * @param {string} props.optionsEndpoint Feed source config endpoint to search.
  * @param {string} props.helpText Help text for dropdown.
+ * @param {string} props.label The label.
  * @param {Function} props.onChange On change callback.
  * @param {Array} props.value Input value.
- * @returns {object} Select groups table.
+ * @param {Array} props.initialOptions Stations offered before searching, e.g.
+ *   the stations of a slide created before the feed existed.
+ * @returns {object} Station selector.
  */
 function StationSelector({
   onChange,
   name,
+  optionsEndpoint,
   helpText = "",
   label,
   value: inputValue,
+  initialOptions = [],
 }) {
   const { t } = useTranslation("common", { keyPrefix: "station-selector" });
   const [data, setData] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const { config } = useContext(userContext);
+  const [loading, setLoading] = useState(false);
+  // Captured once: upgrading an old slide clears its content stations as soon
+  // as the first feed station is picked, and the rest should stay on offer.
+  const [startOptions] = useState(() =>
+    Array.isArray(initialOptions)
+      ? initialOptions.filter((station) => station?.id && station?.name)
+      : [],
+  );
 
-  /**
-   * Adds group to list of groups.
-   *
-   * @param {object} props - The props.
-   * @param {object} props.target - The target.
-   */
   const handleSelect = ({ target }) => {
     const { value, id: localId } = target;
     onChange({
@@ -39,73 +51,81 @@ function StationSelector({
     });
   };
 
-  /**
-   * Fetches data for the multi component
-   *
-   * @param {string} filter - The filter.
-   */
-  const onFilter = (filter) => {
-    setSearchText(filter);
-  };
-
-  /**
-   * Map the data received from the midttrafik api.
-   *
-   * @param {Array} locationData The input location data.
-   * @returns {Array} The mapped data.
-   */
-  const mapLocationData = (locationData) => {
-    return locationData.map((location) => ({
-      id: location?.StopLocation?.extId,
-      name: location?.StopLocation?.name,
-    }));
-  };
-
   useEffect(() => {
-    if (!config?.rejseplanenApiKey) {
-      // eslint-disable-next-line no-console
-      console.error("rejseplanenApiKey not set.");
-      return;
+    // The api does not accept empty string as input.
+    if (!optionsEndpoint || searchText === "") {
+      setLoading(false);
+      return undefined;
     }
 
-    // The api does not accept empty string as input.
-    if (searchText !== "") {
-      const baseUrl = "https://www.rejseplanen.dk/api/location.name";
+    // Shown right away, not after the debounce, so typing gives feedback.
+    setLoading(true);
+
+    // Aborting on cleanup stops a slow, older response from overwriting a
+    // newer one.
+    const controller = new AbortController();
+
+    const timeout = setTimeout(() => {
       fetch(
-        `${baseUrl}?${new URLSearchParams({
-          accessId: config.rejseplanenApiKey || "",
-          format: "json",
-          input: searchText,
-        })}`,
+        `${optionsEndpoint}?${new URLSearchParams({ search: searchText })}`,
+        {
+          headers: getHeaders(),
+          signal: controller.signal,
+        },
       )
-        .then((response) => response.json())
-        .then((rpData) => {
-          if (rpData?.stopLocationOrCoordLocation) {
-            setData(mapLocationData(rpData.stopLocationOrCoordLocation));
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
           }
+          return response.json();
+        })
+        .then((stations) => {
+          setData(Array.isArray(stations) ? stations : []);
+          setLoading(false);
         })
         .catch((er) => {
-          displayError(t("get-error"), er);
+          // An aborted request was replaced by a newer search, which is
+          // still loading.
+          if (er.name !== "AbortError") {
+            setLoading(false);
+            displayError(t("get-error"), er);
+          }
         });
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [searchText, optionsEndpoint]);
+
+  const getNoOptionsText = () => {
+    if (loading) {
+      return t("searching");
     }
-  }, [searchText]);
+
+    return searchText === "" ? t("type-to-search") : t("no-results");
+  };
 
   return (
-    <>
-      {data && (
-        <>
-          <MultiSelectComponent
-            options={data}
-            handleSelection={handleSelect}
-            name={name}
-            selected={inputValue || []}
-            filterCallback={onFilter}
-            label={label}
-          />
-          <small>{helpText}</small>
-        </>
-      )}
-    </>
+    <div className="mb-3" id="station-selector">
+      <MultiSelectComponent
+        options={searchText === "" ? startOptions : data}
+        handleSelection={handleSelect}
+        name={name}
+        selected={inputValue || []}
+        filterCallback={setSearchText}
+        label={label}
+        isLoading={loading}
+        // Rejseplanen already matched the search, and its fuzzy matches (e.g.
+        // "Aa") need not contain the typed text.
+        disableLocalFilter
+        noSelectedString={t("nothing-selected")}
+        searchPlaceholder={t("search-placeholder")}
+        noOptionsText={getNoOptionsText()}
+      />
+      <small>{helpText}</small>
+    </div>
   );
 }
 

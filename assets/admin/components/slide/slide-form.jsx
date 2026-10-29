@@ -274,6 +274,7 @@ function SlideForm({
                           name={formElement.name}
                           value={slide?.feed}
                           formElement={formElement}
+                          slideContent={slide?.content}
                           onChange={(value) => {
                             handleInput({ target: { id: "feed", value } });
                           }}

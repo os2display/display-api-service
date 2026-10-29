@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\Config\RectorConfig;
 use Rector\Doctrine\Set\DoctrineSetList;
-use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 use Rector\Symfony\Set\SymfonySetList;
 
 return RectorConfig::configure()
@@ -51,14 +50,7 @@ return RectorConfig::configure()
         SymfonySetList::SYMFONY_CODE_QUALITY,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
     ])
-    // The (string) casts Rector wants here would re-introduce the silent
-    // null→"" coercion that 987ae75c removed: the title-modifier path is a
-    // correctness boundary, and on PCRE error the event is omitted with a
-    // log rather than passed through with an unfiltered title.
     ->withSkip([
-        NullToStrictStringFuncCallArgRector::class => [
-            __DIR__.'/src/Feed/CalendarApiFeedType.php',
-        ],
         // PHPStan rule fixtures are hand-crafted inputs that must stay verbatim
         // (e.g. silent-catch.php deliberately leaves the catch variable unused to
         // exercise logging.silentCatch). Rector must not refactor them.

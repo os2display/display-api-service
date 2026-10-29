@@ -257,6 +257,23 @@ migrations and install/refresh the bundled templates and screen layouts:
 docker compose exec phpfpm bin/console app:update --no-interaction
 ```
 
+### Hosting requirements
+
+The published images include everything below. Operators who run the code without them (build artifacts or a
+checked-out repository) must provide:
+
+- PHP 8.4 (fpm) with the extensions listed under `require` in `composer.json` (`ext-*`), including **imagick**
+  with ImageMagick 6 or 7 and its JPEG, PNG, WebP and GIF support. Composer refuses to install without them.
+- An ImageMagick security policy that only allows those formats, such as
+  [`imagemagick-policy.xml`](infrastructure/display-api-service/imagemagick-policy.xml) from the application
+  image. Without it, ImageMagick's readers for SVG, MVG, MSL, text and URLs can be abused through crafted
+  uploads to read files or fetch URLs on the server.
+- A PHP `memory_limit` of at least `128M`, the application image's default. Resizing does not raise it: a 50
+  megapixel thumbnail takes about 2 MB of PHP memory.
+- ImageMagick resource limits sized for the server, see
+  [Configuring media upload size limits](#configuring-media-upload-size-limits). Images are resized by
+  ImageMagick, which allocates outside PHP's `memory_limit`.
+
 ## Container images
 
 Production deployments run two images:
@@ -624,6 +641,8 @@ ADMIN_LOGIN_SCREEN_TEXT=''
 
 - ADMIN_REJSEPLANEN_APIKEY: An API key accessing Rejseplanen API used for Travel template.
   See [https://labs.rejseplanen.dk/](https://labs.rejseplanen.dk/) for information about acquiring an API key.
+  Unlike the other options in this section, it is **not** exposed through `/config/admin`: the station
+  search runs server-side in `RejseplanenFeedType`. See `docs/configuration/rejseplanen-feed.md`.
 
   **Default**: Not set.
 - ADMIN_SHOW_SCREEN_STATUS: Should the status of the screen be shown in the Admin (true|false)?
@@ -741,6 +760,62 @@ rather than the friendly Symfony validator message. Keep them ordered as: **PHP-
 The app reads `MEDIA_MAX_UPLOAD_SIZE_MB` per-request, so a deploy / php-fpm worker reload is enough to pick up
 changes; no validator cache clear is needed.
 
+#### Image pixels and memory
+
+Uploaded JPEG, PNG, WebP and GIF images are resized on the first request for each size: thumbnails for the admin,
+and scaled variants for screens (JPEG, PNG and WebP, see below). The memory this
+takes follows the image's width × height, not its file size: a 2 MB JPEG can be 50 megapixels. Images are
+therefore also limited by pixel count. For an animated GIF or WebP the pixels of all its frames count, since resizing
+decodes every frame. Videos and SVGs are only limited by file size; SVGs are not resized, their thumbnail is the
+original file.
+
+| Knob | Where it lives |
+|---|---|
+| `MEDIA_MAX_UPLOAD_PIXELS` (width × height, integer) | `.env` (committed default `50000000`, about 8660×5770) — override like `MEDIA_MAX_UPLOAD_SIZE_MB` |
+
+Images are resized by ImageMagick (the `imagick` PHP extension), outside PHP's `memory_limit`. The application
+image ships ImageMagick 7 Q16-HDRI, which uses about 16 bytes per pixel (non-HDRI Q16 builds about 8):
+
+| Image | Pixels | ImageMagick memory (Q16-HDRI) |
+|---|---|---|
+| 1920×1080 | 2 MP | about 33 MB |
+| 6000×4000 | 24 MP | about 380 MB |
+| 8660×5770 (default limit) | 50 MP | about 800 MB |
+
+ImageMagick's limits apply per php-fpm worker, so the worst case for the server is `PHP_PM_MAX_CHILDREN` workers
+resizing at once. Above `MAGICK_MEMORY_LIMIT` ImageMagick moves to memory-mapped files and then disk, which is
+slower but keeps RAM bounded; above `MAGICK_DISK_LIMIT` the resize fails and is logged on the `media` channel.
+The application image sets:
+
+| Variable | Image default | Meaning |
+|---|---|---|
+| `MAGICK_MEMORY_LIMIT` | `256MiB` | RAM per worker before spilling to memory-mapped files |
+| `MAGICK_MAP_LIMIT` | `512MiB` | Memory-mapped files per worker before spilling to disk |
+| `MAGICK_DISK_LIMIT` | `2GiB` | Temporary disk per worker; larger images fail |
+| `MAGICK_THREAD_LIMIT` | `1` | Threads per worker, since php-fpm already runs workers in parallel |
+| `MAGICK_WIDTH_LIMIT` | `65535` | Widest image ImageMagick will open, also for media uploaded before the pixel limit |
+| `MAGICK_HEIGHT_LIMIT` | `65535` | Tallest image ImageMagick will open |
+
+Raise `MEDIA_MAX_UPLOAD_PIXELS` only together with `MAGICK_DISK_LIMIT`, keeping roughly
+`MEDIA_MAX_UPLOAD_PIXELS × 16 bytes ≤ MAGICK_MEMORY_LIMIT + MAGICK_MAP_LIMIT + MAGICK_DISK_LIMIT`.
+
+ImageMagick reads these once, when ext-imagick loads in the php-fpm master process. Outside the image, set them in
+the master's environment (for example `Environment=` in its systemd unit) or as `resource` policies in ImageMagick's
+`policy.xml`. A pool `env[...]` directive is too late. To check, request a script through php-fpm (not the CLI) that
+prints `Imagick::getResourceLimit(Imagick::RESOURCETYPE_MEMORY)`.
+
+Screens get scaled variants instead of the original. JPEG, PNG and WebP images larger than 1920, 3840 or 7680
+pixels on the long edge list those sizes in `assets.variants` (`assets.uri` stays the original), and the screen
+uses the smallest variant that covers its width and height, allowing up to 10% upscaling. Each variant is generated
+on its first request, so an image takes up to three extra files under `public/media/cache/`, and the first screen to
+show a large image waits a few seconds while it is resized. If generating a variant fails, it is logged on the
+`media` channel and the screen is redirected to the original; the redirect is cached for an hour, so each screen
+retries at most hourly. GIFs and SVGs are always shown as the original.
+
+Known limitation: variant sizes are based on the stored image dimensions, which ignore EXIF orientation. A photo
+taken in portrait with a phone may be stored as landscape with an orientation tag; it still displays upright, but
+the screen may pick a variant one size too small for it, so it is shown slightly upscaled.
+
 ### Rate limiting the API
 
 Nginx rate-limits requests to `index.php` — every `/v2/` API call — per client IP, and answers rejected
@@ -778,6 +853,7 @@ that runs a vanilla nginx image and sets `environment:` itself — see `UPGRADE.
 
 - See `docs/configuration/openid-connect.md` for configuration of OpenID Connect.
 - See `docs/configuration/calendar-api-feed.md` for configuration of CalenderApiFeedType.
+- See `docs/configuration/rejseplanen-feed.md` for configuration of RejseplanenFeedType.
 
 #### Event Database Api V2 Feed Type
 

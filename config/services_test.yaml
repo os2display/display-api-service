@@ -1,0 +1,18 @@
+services:
+    # Service loaded in AbstractBaseApiTestCase::setUp() must be public.
+    App\Utils\IriHelperUtils:
+        public: true
+
+    # Counts checksum calculator runs in tests.
+    App\Tests\Probe\CalculatorProbe:
+        public: true
+        decorates: App\Service\RelationsChecksumCalculator
+        arguments:
+            $inner: '@.inner'
+            $connection: '@doctrine.dbal.default_connection'
+
+    # Counts flushes in tests/Api/FlushCount/.
+    App\Tests\Probe\FlushCounter:
+        public: true
+        tags:
+            - { name: doctrine.event_listener, event: postFlush }

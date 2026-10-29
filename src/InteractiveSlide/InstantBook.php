@@ -435,9 +435,7 @@ class InstantBook implements InteractiveSlideInterface
                 continue;
             }
 
-            if (!isset($result[$scheduleId])) {
-                $result[$scheduleId] = [];
-            }
+            $result[$scheduleId] ??= [];
 
             foreach ($scheduleItems as $scheduleItem) {
                 $eventStartArray = $scheduleItem['start'];

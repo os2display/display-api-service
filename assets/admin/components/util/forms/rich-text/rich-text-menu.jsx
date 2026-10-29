@@ -6,6 +6,7 @@ import {
   faLevelDownAlt,
   faListOl,
   faListUl,
+  faQuoteRight,
   faRedo,
   faRemoveFormat,
   faStrikethrough,
@@ -36,12 +37,8 @@ function RichTextMenu({ editor }) {
         isHeading1: ctx.editor.isActive("heading", { level: 1 }) ?? false,
         isHeading2: ctx.editor.isActive("heading", { level: 2 }) ?? false,
         isHeading3: ctx.editor.isActive("heading", { level: 3 }) ?? false,
-        isHeading4: ctx.editor.isActive("heading", { level: 4 }) ?? false,
-        isNormal:
-          !ctx.editor.isActive("heading", { level: 1 }) &&
-          !ctx.editor.isActive("heading", { level: 2 }) &&
-          !ctx.editor.isActive("heading", { level: 3 }) &&
-          !ctx.editor.isActive("heading", { level: 4 }),
+        isNormal: !ctx.editor.isActive("heading"),
+        isBlockquote: ctx.editor.isActive("blockquote") ?? false,
         isBulletList: ctx.editor.isActive("bulletList") ?? false,
         isOrderedList: ctx.editor.isActive("orderedList") ?? false,
         isParagraph: ctx.editor.isActive("paragraph") ?? false,
@@ -66,14 +63,11 @@ function RichTextMenu({ editor }) {
         >
           <Dropdown.Toggle variant="" id="dropdown-basic">
             <span
-              className={
-                "toggle-text " + !editorState.isNormal ? "is-active" : ""
-              }
+              className={`toggle-text${editorState.isNormal ? "" : " is-active"}`}
             >
               {editorState.isHeading1 && t("toggle-heading-1")}
               {editorState.isHeading2 && t("toggle-heading-2")}
               {editorState.isHeading3 && t("toggle-heading-3")}
-              {editorState.isHeading4 && t("toggle-heading-4")}
             </span>
             {editorState.isNormal && t("normal")}
           </Dropdown.Toggle>
@@ -117,14 +111,14 @@ function RichTextMenu({ editor }) {
             <button
               type="button"
               onClick={() => {
-                editor.chain().focus().toggleHeading({ level: 4 }).run();
+                editor.chain().focus().setParagraph().run();
                 toggleDropdown();
               }}
-              className={editorState.isHeading4 ? "is-active" : ""}
-              aria-label={t("toggle-heading-4")}
-              title={t("toggle-heading-4")}
+              className={editorState.isNormal ? "is-active" : ""}
+              aria-label={t("normal")}
+              title={t("normal")}
             >
-              {t("toggle-heading-4")}
+              {t("normal")}
             </button>
           </Dropdown.Menu>
         </Dropdown>
@@ -167,6 +161,15 @@ function RichTextMenu({ editor }) {
           title={t("toggle-strike-through")}
         >
           <FontAwesomeIcon icon={faStrikethrough} />
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          className={editorState.isBlockquote ? "is-active" : ""}
+          aria-label={t("toggle-blockquote")}
+          title={t("toggle-blockquote")}
+        >
+          <FontAwesomeIcon icon={faQuoteRight} />
         </button>
         <button
           type="button"

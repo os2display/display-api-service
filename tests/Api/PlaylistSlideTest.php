@@ -134,6 +134,42 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $this->assertEquals(true, $relations->exists(fn (int $key, PlaylistSlide $playlistSlide) => $playlistSlide->getSlide()->getId()->equals(Ulid::fromString($slideUlid2))));
     }
 
+    public function testSlideOnPlaylistsFollowsLinks(): void
+    {
+        $client = $this->getAuthenticatedClient();
+
+        $slideIri = $this->findIriBy(Slide::class, ['title' => 'slide_abc_50']);
+        $slideUlid = $this->iriHelperUtils->getUlidFromIRI($slideIri);
+        $playlistIris = [
+            $this->findIriBy(Playlist::class, ['title' => 'playlist_abc_4']),
+            $this->findIriBy(Playlist::class, ['title' => 'playlist_abc_5']),
+        ];
+
+        // What the admin's slide list and editor read after "Gem og luk" (#570).
+        $assertOnPlaylists = function (array $expected) use ($client, $slideIri): void {
+            $item = $client->request('GET', $slideIri)->toArray();
+            $this->assertEqualsCanonicalizing($expected, $item['onPlaylists']);
+
+            $collection = $client->request('GET', '/v2/slides?title=slide_abc_50')->toArray();
+            $this->assertCount(1, $collection['hydra:member']);
+            $this->assertEqualsCanonicalizing($expected, $collection['hydra:member'][0]['onPlaylists']);
+        };
+
+        $client->request('PUT', '/v2/slides/'.$slideUlid.'/playlists', [
+            'json' => array_map(fn (string $iri) => ['playlist' => $this->iriHelperUtils->getUlidFromIRI($iri)], $playlistIris),
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseIsSuccessful();
+        $assertOnPlaylists($playlistIris);
+
+        $client->request('PUT', '/v2/slides/'.$slideUlid.'/playlists', [
+            'json' => [],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseIsSuccessful();
+        $assertOnPlaylists([]);
+    }
+
     public function testGetSlidesList(): void
     {
         $client = $this->getAuthenticatedClient();
