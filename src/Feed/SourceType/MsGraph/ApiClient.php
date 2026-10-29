@@ -42,8 +42,8 @@ class ApiClient
     private const string GRANT_TYPE = 'client_credentials';
 
     private const string CACHE_KEY_TOKEN_PREFIX = 'msgraph-token-';
-    private const string CACHE_KEY_ROOM_LISTS_PREFIX = 'msgraph-roomlists-';
-    private const string CACHE_KEY_ROOMS_PREFIX = 'msgraph-rooms-';
+    private const string CACHE_KEY_ROOM_LISTS_PREFIX = 'msgraph-roomlists-v2-';
+    private const string CACHE_KEY_ROOMS_PREFIX = 'msgraph-rooms-v2-';
     private const string CACHE_KEY_EVENTS_PREFIX = 'msgraph-events-';
 
     /** Tokens are valid for ~1 hour; renew a little early to avoid races. */
@@ -79,7 +79,7 @@ class ApiClient
 
                 $locations = [];
 
-                foreach ($this->requestAllPages($feedSource, '/places/microsoft.graph.roomlist') as $entry) {
+                foreach ($this->requestAllPages($feedSource, '/places/microsoft.graph.roomlist', offsetPagination: true) as $entry) {
                     $email = $this->getPlaceEmail($entry);
 
                     if (null === $email) {
@@ -123,7 +123,7 @@ class ApiClient
 
                 $rooms = [];
 
-                foreach ($this->requestAllPages($feedSource, $path) as $entry) {
+                foreach ($this->requestAllPages($feedSource, $path, offsetPagination: true) as $entry) {
                     $email = $this->getPlaceEmail($entry);
 
                     if (null === $email) {
@@ -300,9 +300,13 @@ class ApiClient
      *
      * @throws MsGraphException
      */
-    private function requestAllPages(FeedSource $feedSource, string $path, array $query = [], array $headers = []): array
+    private function requestAllPages(FeedSource $feedSource, string $path, array $query = [], array $headers = [], bool $offsetPagination = false): array
     {
         $token = $this->getToken($feedSource);
+
+        if ($offsetPagination) {
+            $query['$top'] = self::PAGE_SIZE;
+        }
 
         $url = self::GRAPH_ENDPOINT.$path;
         $results = [];
@@ -338,6 +342,15 @@ class ApiClient
             $url = is_string($next) && '' !== $next ? $next : null;
 
             ++$page;
+
+            // Places can omit nextLink even when more rooms exist.
+            if (null === $url && $offsetPagination && self::PAGE_SIZE === count($data['value'] ?? [])) {
+                $url = self::GRAPH_ENDPOINT.$path.'?'.http_build_query(array_merge($query, ['$skip' => $page * self::PAGE_SIZE]));
+            }
+        }
+
+        if (null !== $url) {
+            throw new MsGraphException('MS Graph pagination exceeded the page limit; refusing to return an incomplete result.');
         }
 
         return $results;

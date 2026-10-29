@@ -133,6 +133,9 @@ fails — so a Graph outage does not hammer the API.
 
 ## Troubleshooting
 
+Room discovery uses explicit pages of 100 and `$skip` when Graph omits `@odata.nextLink`.
+An empty room-list selection makes all discovered rooms available, regardless of bookings.
+
 Failures are logged on the `feed` channel. If room lists or rooms cannot be loaded in the admin,
 the standard persistent error toast shows a safe connection error and suggested checks.
 Raw Microsoft responses and credentials are not exposed. These lookup failures return HTTP 502;

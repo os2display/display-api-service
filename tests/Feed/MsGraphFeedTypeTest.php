@@ -261,6 +261,72 @@ class MsGraphFeedTypeTest extends TestCase
         $this->createFeedType($client)->getConfigOptions(new Request(), $this->createFeedSource(), 'locations');
     }
 
+    public function testRoomDiscoveryContinuesWithoutNextLink(): void
+    {
+        $rooms = array_map(static fn (int $number): array => [
+            'emailAddress' => 'room'.$number.'@example.com',
+            'displayName' => 'Room '.$number,
+        ], range(1, 100));
+        $requests = [];
+        $http = new MockHttpClient(static function (string $method, string $url) use (&$requests, $rooms): MockResponse {
+            $requests[] = $url;
+            if ('POST' === $method) {
+                return new MockResponse('{"access_token":"test-token","expires_in":3600}');
+            }
+
+            parse_str((string) parse_url($url, PHP_URL_QUERY), $query);
+            self::assertSame('100', $query['$top']);
+
+            return new MockResponse(json_encode(['value' => isset($query['$skip']) ? [
+                ['emailAddress' => 'last@example.com', 'displayName' => 'Last room'],
+            ] : $rooms], JSON_THROW_ON_ERROR));
+        });
+
+        $client = new ApiClient($http, new ArrayAdapter());
+        $result = $client->getRooms($this->createFeedSource());
+
+        $this->assertCount(101, $result);
+        $this->assertArrayHasKey('last@example.com', $result);
+        parse_str((string) parse_url($requests[2], PHP_URL_QUERY), $lastQuery);
+        $this->assertSame('100', $lastQuery['$skip']);
+    }
+
+    public function testRoomDiscoveryFollowsNextLinkWithoutReplacingItsQuery(): void
+    {
+        $next = ApiClient::GRAPH_ENDPOINT.'/places/microsoft.graph.room?$skiptoken=cursor';
+        $requests = [];
+        $http = new MockHttpClient(static function (string $method, string $url) use (&$requests, $next): MockResponse {
+            $requests[] = $url;
+            if ('POST' === $method) {
+                return new MockResponse('{"access_token":"test-token","expires_in":3600}');
+            }
+
+            return new MockResponse(json_encode([
+                'value' => [['emailAddress' => $url === $next ? 'second@example.com' : 'first@example.com']],
+                '@odata.nextLink' => $url === $next ? null : $next,
+            ], JSON_THROW_ON_ERROR));
+        });
+
+        $rooms = (new ApiClient($http, new ArrayAdapter()))->getRooms($this->createFeedSource());
+
+        $this->assertCount(2, $rooms);
+        $this->assertSame($next, $requests[2]);
+    }
+
+    public function testRoomDiscoveryFailsRatherThanReturningTruncatedResults(): void
+    {
+        $http = new MockHttpClient(static fn (string $method): MockResponse => new MockResponse(
+            'POST' === $method ? '{"access_token":"test-token","expires_in":3600}' : json_encode([
+                'value' => array_fill(0, 100, ['emailAddress' => 'room@example.com']),
+            ], JSON_THROW_ON_ERROR),
+        ));
+
+        $this->expectException(MsGraphException::class);
+        $this->expectExceptionMessage('refusing to return an incomplete result');
+
+        (new ApiClient($http, new ArrayAdapter()))->getRooms($this->createFeedSource());
+    }
+
     public function testRoomListFailureDoesNotExposeProviderResponse(): void
     {
         $apiClient = $this->createMock(ApiClient::class);
