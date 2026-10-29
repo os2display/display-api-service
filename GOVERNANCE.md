@@ -150,6 +150,7 @@ Product Management is responsible for:
 - Keeping the repository organized, including managing stale branches and clarifying issue and pull request ownership.
 - Ensuring repository practices support traceability and comply with licensing and security requirements.
 
+- First reply to created issues, tagging maintenance provider when input is needed.
 The Maintenance Provider is responsible for:
 
 - Monitoring repository automation and maintaining required CI checks.
