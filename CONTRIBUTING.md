@@ -115,7 +115,7 @@ addressed before approval.
 
 All pull requests are reviewed for product security implications,
 functionality, quality, and alignment with project governance. For contributions
-to the plugin-like zone contributers pay for the review. 
+to the plugin-like zone contributers pay for the review.
 
 ## Functional Testing
 
@@ -123,7 +123,7 @@ After code review, changes are merged into the `develop` branch for functional
 testing. The community does not maintain a shared test environment and relies
 on providers to establish test environments for their customers. Contributors can
 use the [functional test guide](docs/test-guide/test-guide.md) when carrying out
-these tests. 
+these tests.
 
 Before changes are merged into the `main` branch, the contributor is responsible
 for ensuring they have been tested and have not caused unintended side effects
@@ -132,9 +132,9 @@ customers, or, for new features, by the community where possible.
 
 ## Release
 
-The project aims to do monthly releases, where additions to main are tagged for 
-a release and a new release image is built. The community may also arrange 
-unscheduled releases to address security issues or major bug fixes. Any release 
+The project aims to do monthly releases, where additions to main are tagged for
+a release and a new release image is built. The community may also arrange
+unscheduled releases to address security issues or major bug fixes. Any release
 requested outside the regular schedule must be funded by the requester.
 
 ## Documentation
@@ -148,4 +148,3 @@ Put detailed integration guidance in the relevant documentation under `docs/`,
 upgrade instructions in `UPGRADE.md`, and architectural decisions in an ADR.
 Update generated API documentation when the API contract changes, and link to
 specialized documentation from the README where useful.
-
