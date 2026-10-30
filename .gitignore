@@ -1,3 +1,16 @@
+# Ignore custom templates folder.
+/assets/shared/custom-templates/*
+
+# Ignore custom screen layouts folder.
+/assets/shared/custom-screen-layouts/*
+
+# Ignore the public/fixtures folder.
+/public/fixtures
+
+# Ignore release json file (and its deprecated copy for the 2.x client upgrade path).
+/public/release.json
+/public/client/release.json
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -12,8 +25,6 @@
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
-
-node_modules
 
 public/media/*
 !public/media/thumbnail_video.png
@@ -38,3 +49,34 @@ launch.json
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###
+
+###> pentatrion/vite-bundle ###
+/node_modules/
+/public/build/
+###< pentatrion/vite-bundle ###
+
+#> Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/.playwright-mcp/
+#< Playwright
+
+###> vincentlanglet/twig-cs-fixer ###
+/.twig-cs-fixer.cache
+###< vincentlanglet/twig-cs-fixer ###
+
+###> anthropic/claude-code ###
+.claude/*
+!.claude/settings.json
+!.claude/agents/
+!.claude/commands/
+!.claude/skills/
+###< anthropic/claude-code ###
+
+# `mate discover` (symfony/ai-mate >= 0.13) copies packaged skills out of vendor/ into
+# .agents/skills/ and symlinks them from .claude/skills/. Both are generated from the
+# installed vendor/ — regenerate them with `vendor/bin/mate discover` instead of committing.
+/.agents/
+/.claude/skills/mate-*

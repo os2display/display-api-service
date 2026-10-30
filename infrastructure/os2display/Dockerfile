@@ -1,0 +1,217 @@
+################################
+# Assets build
+################################
+# Built on the build machine's platform only: the JS/CSS output is the same for
+# every target, and esbuild under emulation is slow and unreliable.
+FROM --platform=$BUILDPLATFORM node:24-alpine AS assets_builder
+
+ARG APP_VERSION="develop"
+
+WORKDIR /app
+
+# Lockfile + vite config first so the npm install layer caches across
+# unrelated source edits.
+COPY --from=repository-root package.json package-lock.json vite.config.js ./
+RUN npm ci --no-audit --no-fund
+
+# Source for `npm run build`. Vite emits to /app/public/build, which the
+# api_app_builder stage copies out. Files outside of `assets/` (the vite
+# entrypoints) are not consumed by the build and don't belong here —
+# `public/client/online-check/` and the `public/media/thumbnail_*.png`
+# fallbacks reach the final image via the api_app_builder's repo-root
+# copy below.
+COPY --from=repository-root assets/ ./assets/
+RUN npm run build
+
+
+################################
+# PHP with ImageMagick
+################################
+# itkdev/php8.4-fpm publishes two parallel series: `2.x.y` (Ubuntu),
+# tracked by `:latest`, and `alpine-1.4.x` (Alpine), tracked by
+# `:alpine`. `:alpine` is therefore a moving alias to the newest
+# `alpine-1.4.x` — convenient, but not reproducible across time.
+# TODO: pin to a specific `alpine-1.4.x` tag (or a digest) once we
+# settle on a baseline.
+#
+# Base of both the builder and the final image, so composer and Symfony's
+# cache warmup in the builder see the same extensions as production.
+FROM itkdev/php8.4-fpm:alpine AS php_imagick
+
+USER root
+
+# Images are resized with ImageMagick through ext-imagick, which the base
+# image lacks. Built with PIE (the PHP Foundation's successor to PECL)
+# against the base image's PHP; the Alpine php84-pecl-imagick package
+# targets Alpine's own PHP build and won't load. PIE enables the extension.
+# PIE and the extension are pinned; ImageMagick follows the base image's
+# Alpine release.
+COPY --from=ghcr.io/php/pie:1.5.2-bin /pie /usr/local/bin/pie
+RUN apk add --no-cache imagemagick imagemagick-jpeg imagemagick-webp libgomp \
+    && apk add --no-cache --virtual .imagick-build-deps $PHPIZE_DEPS imagemagick-dev libtool \
+    && pie install imagick/imagick:3.8.1 \
+    && apk del .imagick-build-deps \
+    && rm -rf /root/.pie
+
+# Only the allowed raster upload formats may be read or written; blocks the
+# readers abused through crafted uploads (SVG, MVG, MSL, TEXT, URL, ...).
+COPY imagemagick-policy.xml /etc/ImageMagick-7/policy.xml
+
+# Fail the build if imagick isn't loaded, lacks an upload format, or the
+# policy lets the text reader through. Otherwise the first sign would be a
+# 500 on the first thumbnail.
+RUN php -r 'exit(extension_loaded("imagick") && !array_diff(["GIF", "JPEG", "PNG", "WEBP"], Imagick::queryFormats()) ? 0 : 1);' \
+    && php -r 'try { (new Imagick())->readImage("text:/etc/passwd"); exit(1); } catch (ImagickException $e) { exit(0); }'
+
+# ImageMagick allocates outside PHP's memory_limit and its limits apply per
+# php-fpm worker. Above MEMORY it spills to memory-mapped files, then disk,
+# so RAM stays bounded with PHP_PM_MAX_CHILDREN workers resizing at once; a
+# MEDIA_MAX_UPLOAD_PIXELS image (about 800 MB at Q16-HDRI) fits within
+# MEMORY + MAP + DISK. One thread per worker, since php-fpm already runs
+# workers in parallel. WIDTH and HEIGHT make ImageMagick itself refuse a
+# decompression bomb, including media uploaded before the pixel limit; 65535
+# is the largest JPEG, so no allowed upload reaches it. See "Image pixels and
+# memory" in README.md.
+ENV MAGICK_MEMORY_LIMIT=256MiB \
+    MAGICK_MAP_LIMIT=512MiB \
+    MAGICK_DISK_LIMIT=2GiB \
+    MAGICK_THREAD_LIMIT=1 \
+    MAGICK_WIDTH_LIMIT=65535 \
+    MAGICK_HEIGHT_LIMIT=65535
+
+USER deploy
+
+
+################################
+# API backend build
+################################
+FROM php_imagick AS api_app_builder
+
+ARG APP_VERSION="develop"
+ARG APP_RELEASE_TIMESTAMP=0
+ARG APP_RELEASE_TIME=""
+
+USER root
+
+# Pinned via the official composer image so the build doesn't depend on
+# whatever composer happens to ship in the FPM base.
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+
+WORKDIR /app
+
+USER deploy
+
+# Two-pass composer install:
+#   1. Lockfile + composer.json only with --no-scripts. The vendor/ layer
+#      then survives unrelated source-code edits.
+#   2. After the full source COPY, re-run with scripts to finalise the
+#      autoloader and trigger Symfony's cache:clear hook.
+COPY --chown=deploy:deploy --from=repository-root composer.json composer.lock symfony.lock ./
+RUN APP_ENV=prod composer install --no-dev -o --classmap-authoritative --no-scripts
+
+# Brings in the full source tree, including the static assets the screen
+# client needs at runtime (public/client/online-check/, the
+# public/media/thumbnail_*.png fallbacks). .dockerignore filters out the
+# rest of public/media/ — see the file for the preserved entries.
+COPY --chown=deploy:deploy --from=repository-root ./ ./
+
+# The committed .env defaults APP_ENV to dev for local development. The
+# image only ships prod dependencies (composer install --no-dev), so any
+# tooling that reads .env directly without our docker-entrypoint.sh
+# would bootstrap a dev environment that can't resolve its services.
+RUN sed -i 's/^APP_ENV=dev$/APP_ENV=prod/' .env
+
+# Vite manifest must be in place before the second composer install
+# triggers cache:clear, otherwise the vite bundle can't generate its
+# cache config files.
+# @see https://symfony-vite.pentatrion.com/guide/performance.html#caching-configuration-files-%F0%9F%8F%83
+COPY --chown=deploy:deploy --from=assets_builder /app/public/build ./public/build
+
+RUN APP_ENV=prod composer install --no-dev --optimize-autoloader --classmap-authoritative
+
+# The client polls /release.json to detect when a screen should refresh;
+# shape per docs/release-example.json.
+#
+# DEPRECATED: the copy at /client/release.json exists only to provide an
+# upgrade path for still-running 2.x screen clients, which poll that path.
+# Without it the Symfony catch-all /client{subroutes} route answers with the
+# SPA's index.html and 2.x screens never detect the new release. Remove once
+# 2.x clients are out of the field.
+RUN printf '{"releaseTimestamp": %s, "releaseTime": "%s", "releaseVersion": "%s"}\n' \
+      "${APP_RELEASE_TIMESTAMP}" \
+      "${APP_RELEASE_TIME}" \
+      "${APP_VERSION}" \
+      > public/release.json \
+    && cp public/release.json public/client/release.json
+
+
+################################
+# PHP-FPM (API) production image
+################################
+FROM php_imagick
+
+# OCI image annotations. `title`, `description`, `url`, `source`, `version`,
+# `created`, `revision` and `licenses` are injected at build time by the
+# docker/metadata-action step in .github/workflows/build-images.yml; the
+# four below are not emitted by that action and have to live here.
+LABEL org.opencontainers.image.authors="ITK Dev <itkdev@ba.aarhus.dk>" \
+      org.opencontainers.image.vendor="OS2Display" \
+      org.opencontainers.image.documentation="https://github.com/os2display/os2display#readme" \
+      org.opencontainers.image.base.name="itkdev/php8.4-fpm:alpine"
+
+# OPcache values follow the Symfony performance checklist
+# (https://symfony.com/doc/current/performance.html): the prod image ships
+# ~8k PHP files (vendor --no-dev ≈ 7.5k + app code + warmed var/cache/prod),
+# so MAX_ACCELERATED_FILES=16229 (OPcache rounds up to primes from a fixed
+# table; 16229 is the bucket above 8k) leaves ~2x headroom; the 32 MB
+# interned-strings buffer covers Symfony's many fully-qualified class names
+# (the base image default of 16 is too tight). PRELOAD points at Symfony's
+# preload entry, which requires the warmed prod cache — docker-entrypoint.sh
+# runs cache:warmup before exec'ing php-fpm, so the generated
+# App_KernelProdContainer.preload.php exists by the time OPcache preloads.
+# PHP_OPCACHE_PRELOAD_USER is left at the base image's default (`deploy`),
+# which matches the user php-fpm's master runs as here (see USER below).
+ENV APP_ENV=prod \
+    PHP_OPCACHE_ENABLED=1 \
+    PHP_OPCACHE_VALIDATE_TIMESTAMPS=0 \
+    PHP_OPCACHE_MAX_ACCELERATED_FILES=16229 \
+    PHP_OPCACHE_MEMORY_CONSUMPTION=256 \
+    PHP_OPCACHE_INTERNED_STRINGS_BUFFER=32 \
+    PHP_OPCACHE_PRELOAD=/app/config/preload.php \
+    PHP_PM_TYPE="dynamic" \
+    PHP_PM_MAX_CHILDREN="24" \
+    PHP_PM_MAX_REQUESTS="0" \
+    PHP_PM_START_SERVERS="5" \
+    PHP_PM_MIN_SPARE_SERVERS="5" \
+    PHP_PM_MAX_SPARE_SERVERS="10"
+
+USER root
+
+# Needed at container start so the entrypoint can run
+# `composer dump-env prod` against the operator's runtime env.
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+
+# Prometheus exporter for php-fpm pool stats; scraped by ops monitoring.
+COPY --from=hipages/php-fpm_exporter:2.2.0 /php-fpm_exporter /usr/local/bin/php-fpm_exporter
+
+# Minimal FastCGI client (~100 KB) so `opcache-status` can execute
+# bin/opcache-status.php inside an FPM worker — the only place the pool's
+# OPcache shared memory is visible (CLI PHP has its own). The lightweight
+# alternative to bundling the ~4 MB cachetool phar.
+RUN apk add --no-cache fcgi
+
+COPY --chmod=0755 docker-entrypoint.sh opcache-status /usr/local/bin/
+
+USER deploy
+
+WORKDIR /app
+
+COPY --chown=deploy:deploy --from=api_app_builder /app .
+
+# Mount point for the Symfony secrets vault.
+RUN mkdir -p ./config/secrets
+
+# Entrypoint compiles env vars to .env.local.php and warms the Symfony
+# cache before exec'ing CMD; CMD stays overridable for ad-hoc commands.
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["php-fpm"]

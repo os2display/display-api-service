@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use App\Entity\Tenant\Media;
-use App\Exceptions\EntityException;
+use App\Entity\Tenant\Theme;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
@@ -18,47 +18,29 @@ class MediaDoctrineEventListener
         private readonly CacheManager $imageCacheManager,
     ) {}
 
-    /**
-     * Add metadata about the uploaded media.
-     */
-    public function postPersist(Media $media, LifecycleEventArgs $event): void
-    {
-        $file = $this->getPath($media);
-        $info = getimagesize($file);
-
-        $media->setMimeType(mime_content_type($file));
-
-        if (false !== $info) {
-            $media->setWidth($info[0]);
-            $media->setHeight($info[1]);
-        }
-
-        $media->setSize(filesize($file));
-        $media->setSha(sha1_file($file));
-
-        $em = $event->getObjectManager();
-        $em->persist($media);
-        $em->flush();
-    }
-
     public function preRemove(Media $media, LifecycleEventArgs $event): void
     {
         if (count($media->getSlides()) > 0) {
             throw new ConflictHttpException('Media cannot be removed since it is bound to one or more slides');
         }
 
-        // Remove cached images from LiipImagineBundle.
-        $this->imageCacheManager->remove($this->storage->resolveUri($media, 'file'));
+        // The theme.logo_id foreign key would fail the delete in the flush.
+        if (null !== $event->getObjectManager()->getRepository(Theme::class)->findOneBy(['logo' => $media])) {
+            throw new ConflictHttpException('Media cannot be removed since it is the logo of a theme');
+        }
     }
 
-    private function getPath(Media $media): string
+    public function postRemove(Media $media): void
     {
-        $path = $this->storage->resolvePath($media, 'file');
+        // Remove cached images from LiipImagineBundle once the row is deleted,
+        // so a failed delete keeps them.
+        $path = $this->storage->resolveUri($media, 'file');
 
+        // CacheManager::remove(null) would clear the whole cache.
         if (null === $path) {
-            throw new EntityException('Media file path is null');
+            return;
         }
 
-        return $path;
+        $this->imageCacheManager->remove($path);
     }
 }

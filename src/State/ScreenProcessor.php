@@ -126,7 +126,6 @@ class ScreenProcessor extends AbstractProcessor
                 if (is_null($groupToSave)) {
                     throw new InvalidArgumentException('Unknown screen group resource');
                 }
-                /** @psalm-suppress InvalidArgument */
                 $groupCollection->add($groupToSave);
             }
             $screen->setScreenGroups($groupCollection);

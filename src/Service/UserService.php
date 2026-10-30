@@ -16,7 +16,7 @@ use App\Repository\UserActivationCodeRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserRoleTenantRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Uid\Ulid;
 
@@ -71,7 +71,7 @@ class UserService
         $user = $this->security->getUser();
 
         // Make sure user is an external user.
-        if (UserTypeEnum::OIDC_EXTERNAL === !$user->getUserType()) {
+        if (UserTypeEnum::OIDC_EXTERNAL !== $user->getUserType()) {
             throw new BadRequestException('User is not of external type.');
         }
 

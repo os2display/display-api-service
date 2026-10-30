@@ -11,11 +11,13 @@
     <php>
         <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
+        <!-- The API suite with its deprecation report outgrows the container's PHP_MEMORY_LIMIT (256M). -->
+        <ini name="memory_limit" value="1G" />
         <server name="APP_ENV" value="test" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
         <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
-        <server name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
+        <server name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
 
     <testsuites>

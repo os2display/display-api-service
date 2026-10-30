@@ -123,6 +123,68 @@ class ThemesTest extends AbstractBaseApiTestCase
         ]);
     }
 
+    public function testCreateThemeWithBrokenCssIsRejected(): void
+    {
+        // An unterminated comment used to hang every screen showing the theme (#572).
+        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v2/themes', [
+            'json' => [
+                'title' => 'Broken theme',
+                'css' => "/* Ændre baggrundsfarve til video\n#SLIDE_ID .template-video { background-color: black }",
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(422);
+        $this->assertJsonContains([
+            'violations' => [
+                ['propertyPath' => 'css'],
+            ],
+        ]);
+    }
+
+    public function testUpdateThemeCanClearCss(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant, 'title' => 'theme_abc_1']);
+
+        $client->request('PUT', $iri, [
+            'json' => [
+                'title' => 'theme_abc_1',
+                'css' => '',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['cssStyles' => '']);
+    }
+
+    public function testUpdateThemeWithoutCssKeepsCss(): void
+    {
+        // A client updating only the title must not wipe the css (ADR 003).
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant, 'title' => 'theme_abc_1']);
+        $headers = ['Content-Type' => 'application/ld+json'];
+
+        $client->request('PUT', $iri, [
+            'json' => ['title' => 'theme_abc_1', 'css' => '#SLIDE_ID { color: red; }'],
+            'headers' => $headers,
+        ]);
+        $this->assertResponseIsSuccessful();
+
+        $client->request('PUT', $iri, [
+            'json' => ['title' => 'theme_abc_1', 'description' => 'Only the description changes'],
+            'headers' => $headers,
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['description' => 'Only the description changes', 'cssStyles' => '#SLIDE_ID { color: red; }']);
+    }
+
     public function testUpdateTheme(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');

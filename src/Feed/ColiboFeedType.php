@@ -11,9 +11,12 @@ use App\Feed\SourceType\Colibo\ApiClient;
 use App\Feed\SourceType\Colibo\SecretsDTO;
 use App\Service\FeedService;
 use FeedIo\Feed\Item;
+use FeedIo\Feed\Item\Author;
+use FeedIo\Feed\Item\Media;
 use FeedIo\Feed\Node\Category;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
@@ -34,6 +37,7 @@ class ColiboFeedType implements FeedTypeInterface
         private readonly FeedService $feedService,
         private readonly ApiClient $apiClient,
         private readonly CacheItemPoolInterface $feedsCache,
+        private readonly LoggerInterface $feedLogger,
     ) {}
 
     public function getAdminFormOptions(FeedSource $feedSource): array
@@ -126,19 +130,24 @@ class ColiboFeedType implements FeedTypeInterface
             $updated = $entry->updated ?? $entry->publishDate;
             $item->setLastModified(new \DateTime($updated));
 
-            $author = new Item\Author();
+            $author = new Author();
             $author->setName($entry->publisher->name);
             $item->setAuthor($author);
 
             if (null !== $entry->fields->galleryItems) {
                 try {
                     $galleryItems = json_decode($entry->fields->galleryItems, true, 512, JSON_THROW_ON_ERROR);
-                } catch (\JsonException) {
+                } catch (\JsonException $e) {
+                    $this->feedLogger->warning('Malformed gallery items in Colibo feed entry', [
+                        'exception' => $e,
+                        'feed_id' => (string) $feed->getId(),
+                        'feed_source_id' => (string) $feedSource->getId(),
+                    ]);
                     $galleryItems = [];
                 }
 
                 foreach ($galleryItems as $galleryItem) {
-                    $media = new Item\Media();
+                    $media = new Media();
 
                     $large = sprintf('%s/api/files/%s/thumbnail/large', $baseUri, $galleryItem['id']);
                     $media->setUrl($large);

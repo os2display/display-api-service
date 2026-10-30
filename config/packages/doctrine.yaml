@@ -9,6 +9,12 @@ doctrine:
         types:
             rrule: App\DBAL\RRuleType
 
+        # The cache_items table is created and owned by the cache layer when
+        # CACHE_ADAPTER=dbal (Symfony's DoctrineDbalAdapter); hide it from the
+        # schema tools so doctrine:migrations:diff and schema:validate don't
+        # try to drop it.
+        schema_filter: ~^(?!cache_items$)~
+
     orm:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware

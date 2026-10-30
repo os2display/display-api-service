@@ -3,14 +3,14 @@ App\Entity\ScreenLayoutRegions:
   screen_layout_region (template):
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
-    id: '<ulid($createdAt)>'
+    id: "<ulid($createdAt)>"
 
   screen_layout_region_a (extends screen_layout_region):
-    title: 'Left'
-    gridArea: [ 'a' ]
+    title: "Left"
+    gridArea: ["a"]
   screen_layout_region_b (extends screen_layout_region):
-    title: 'Right'
-    gridArea: [ 'b' ]
+    title: "Right"
+    gridArea: ["b"]
   screen_layout_region_full (extends screen_layout_region):
-    title: 'full'
-    gridArea: [ 'a' ]
+    title: "full"
+    gridArea: ["a"]

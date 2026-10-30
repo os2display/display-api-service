@@ -13,6 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ScreenUser|null findOneBy(array $criteria, array $orderBy = null)
  * @method ScreenUser[]    findAll()
  * @method ScreenUser[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<ScreenUser>
  */
 class ScreenUserRepository extends ServiceEntityRepository
 {

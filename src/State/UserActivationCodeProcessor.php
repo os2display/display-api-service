@@ -45,7 +45,7 @@ class UserActivationCodeProcessor implements ProcessorInterface
         $code = new UserActivationCode();
         $code->setCode($this->userService->generateExternalUserCode());
         $code->setTenant($user->getActiveTenant());
-        $code->setCodeExpire(\DateTimeImmutable::createFromInterface((new \DateTime())->add(new \DateInterval($this->userService->getCodeExpireInterval()))));
+        $code->setCodeExpire(\DateTimeImmutable::createFromInterface(new \DateTime()->add(new \DateInterval($this->userService->getCodeExpireInterval()))));
 
         $displayName = $data->displayName;
         $email = $this->userService->getEmailFromDisplayName($displayName);

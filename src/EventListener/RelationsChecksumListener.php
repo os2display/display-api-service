@@ -20,6 +20,7 @@ use App\Entity\Tenant\ScreenGroupCampaign;
 use App\Entity\Tenant\Slide;
 use App\Service\RelationsChecksumCalculator;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
@@ -59,8 +60,20 @@ use Doctrine\ORM\Events;
 #[AsDoctrineListener(event: Events::postFlush)]
 class RelationsChecksumListener
 {
+    /**
+     * One entry per onFlush still awaiting its postFlush: whether that flush touched the checksum tree.
+     *
+     * A stack, not a single flag, in case a flush ever runs inside another flush's commit (no listener does
+     * today); the inner postFlush must not consume the outer flush's entry.
+     * A failed flush never reaches postFlush and leaves its entry below later ones, where it is never read.
+     *
+     * @var bool[]
+     */
+    private array $pending = [];
+
     public function __construct(
         private readonly RelationsChecksumCalculator $calculator,
+        private readonly bool $enabled = false,
     ) {}
 
     /**
@@ -78,6 +91,10 @@ class RelationsChecksumListener
      */
     final public function prePersist(PrePersistEventArgs $args): void
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $entity = $args->getObject();
 
         switch ($entity::class) {
@@ -169,6 +186,10 @@ class RelationsChecksumListener
      */
     final public function preUpdate(PreUpdateEventArgs $args): void
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $entity = $args->getObject();
 
         if ($entity instanceof RelationsChecksumInterface) {
@@ -189,6 +210,10 @@ class RelationsChecksumListener
      */
     final public function preRemove(PreRemoveEventArgs $args): void
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $entity = $args->getObject();
 
         switch ($entity::class) {
@@ -230,17 +255,26 @@ class RelationsChecksumListener
      * This is required because Doctrine does not call the "preUpdate" listener for entities that only have
      * collection changes.
      *
+     * It also records whether this flush touches the checksum tree, so postFlush can skip the calculator when it
+     * does not (e.g. the ScreenUser heartbeat).
+     *
      * @param OnFlushEventArgs $args
      *
      * @return void
      */
     final public function onFlush(OnFlushEventArgs $args): void
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $em = $args->getObjectManager();
         $uow = $em->getUnitOfWork();
 
+        $relevant = false;
+
         // Catch ManyToMany collection adds/removes
-        foreach ($uow->getScheduledCollectionUpdates() as $collection) {
+        foreach ([...$uow->getScheduledCollectionUpdates(), ...$uow->getScheduledCollectionDeletions()] as $collection) {
             $owner = $collection->getOwner();
             if ($owner instanceof RelationsChecksumInterface) {
                 $owner->setChanged(true);
@@ -248,34 +282,41 @@ class RelationsChecksumListener
                     $em->getClassMetadata($owner::class),
                     $owner
                 );
+                $relevant = true;
             }
         }
 
-        foreach ($uow->getScheduledCollectionDeletions() as $collection) {
-            $owner = $collection->getOwner();
-            if ($owner instanceof RelationsChecksumInterface) {
-                $owner->setChanged(true);
-                $uow->recomputeSingleEntityChangeSet(
-                    $em->getClassMetadata($owner::class),
-                    $owner
-                );
+        // Schedule has no checksum of its own, but belongs to a playlist (see preRemove).
+        if (!$relevant) {
+            foreach ([...$uow->getScheduledEntityInsertions(), ...$uow->getScheduledEntityUpdates(), ...$uow->getScheduledEntityDeletions()] as $entity) {
+                if ($entity instanceof RelationsChecksumInterface || $entity instanceof Schedule) {
+                    $relevant = true;
+                    break;
+                }
             }
         }
+
+        $this->pending[] = $relevant;
     }
 
     /**
      * PostFlush listener.
      *
-     * Executes update SQL queries to set changed and relations_checksum fields in the database.
+     * Executes update SQL queries to set changed and relations_checksum fields in the database, when onFlush found
+     * a relevant change.
      *
      * @param PostFlushEventArgs $args the PostFlushEventArgs object containing information about the event
      *
      * @return void
      *
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     final public function postFlush(PostFlushEventArgs $args): void
     {
+        if (!$this->enabled || true !== array_pop($this->pending)) {
+            return;
+        }
+
         $this->calculator->execute(withWhereClause: true);
     }
 }
