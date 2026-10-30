@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Summary of 3.0
+
+The release candidate sections below list the details. Upgrading from 2.x is described in `UPGRADE.md`.
+
+- Gathered the API, Admin, Screen client and Templates repositories into one application. One stack
+  serves the API, `/admin` and `/client`; the separate admin and client containers are gone.
+- Bundled the templates with the code and removed remote-components. External 2.x templates must be
+  converted to custom templates.
+- Moved all configuration to environment variables. The admin and client `config.json` files are gone
+  and env var names are aligned; 2.8's `app:utils:convert-env-to-3x` exports a running 2.x setup.
+- Switched the image builds to GHCR with multi-arch images, and added `app:update`, which runs the
+  migrations and installs the templates.
+- Upgraded to PHP 8.4 and Vite 7, consolidated the 2.x migrations into one, and made running 2.x
+  screens reload into the 3.0 client by themselves.
+- Made the cache backend configurable, so Redis is optional, and moved sessions to Redis by default.
+- Made the screen client keep its last good content when the API is slow, throttled or failing, retry
+  with backoff, and stop caching partly failed pulls. Screens send fewer requests and pull every 10
+  minutes by default (30 seconds in 2.x); campaigns start and end on a pull.
+- Made screens show image variants scaled to the screen, and fixed video playback, cross-fades and the
+  fallback image when there is no content.
+- Replaced the rich text editor (Quill) with Tiptap.
+- Applied theme css as written, using native css nesting. Themes are checked on save, and the admin
+  highlights the css and lists problems while typing.
+- Switched thumbnails to ImageMagick, added a pixel limit on image uploads and allowed WebP.
+- Fixed many admin save, list and preview bugs, such as stale counts, lost screen relations and the
+  playlist preview.
+- Stopped exposing the Rejseplanen API key; station search runs through the new Rejseplanen feed type.
+- Added structured, channel-split logging (ADR 011). Database and JWT signing-key outages return 503
+  instead of 500 or 401, so screens are not logged out.
+- Removed the deprecated SparkleIO, Event Database v1 and Koba feed types.
+- Added Taskfile, Playwright and Vitest tests, and replaced Psalm with PHPStan. CI now blocks breaking
+  `/v2` API changes, checks the schema against Postgres and lints shell scripts.
+- Added ADRs and governance documentation.
+
+### Changes
+
 - Improved project documentation on governance, contribution workflows, security reporting, and contributor acknowledgements.
 - Added ADRs 012 and 013 defining governance boundaries, contribution requirements, and
   maintenance expectations for core and plugin-like zones.
