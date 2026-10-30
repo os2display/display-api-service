@@ -1225,10 +1225,10 @@ If you think the template could be used by other, consider contributing the temp
 
 #### Guide for contributing templates
 
-- Fork the `os2display/display` repository.
+- Fork the `os2display/os2display` repository.
 - Move your custom template files (the .json and .jsx files and other required files) from the
   `assets/shared/custom-templates/` folder to the `assets/shared/templates/` folder.
-- Create a PR to `os2display/display` repository.
+- Create a PR to `os2display/os2display` repository.
 
 ## Screen Layouts
 
