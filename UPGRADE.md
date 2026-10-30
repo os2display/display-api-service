@@ -25,11 +25,18 @@
 ### What changed
 
 3.0 merges the previously separate Admin, Client and Templates repositories into the API repository,
-<https://github.com/os2display/display-api-service>, which now contains the complete OS2display
-project. The old admin, client and templates repositories will be archived when 2.x no longer
-receives security updates.
+which is renamed from `os2display/display-api-service` to <https://github.com/os2display/os2display>
+and now contains the complete OS2display project. The old admin, client and templates repositories
+will be archived when 2.x no longer receives security updates.
 
 Consequences for an upgrade:
+
+- **New repository and image names.** The images are published to GHCR as
+  `ghcr.io/os2display/os2display` and `ghcr.io/os2display/os2display-nginx`; the 2.x images on Docker
+  Hub (`os2display/display-api-service`, `os2display/display-api-service-nginx`) keep their names
+  and get no 3.x tags. Release tarballs are named `os2display-<version>.tar.gz`. GitHub redirects
+  the old repository URL, but update existing clones with
+  `git remote set-url origin https://github.com/os2display/os2display.git`.
 
 - **One stack.** A single application now serves the API, the admin and the screen client. Separate
   admin/client containers (and their `config.json` files) go away.
@@ -148,15 +155,15 @@ Follow the upgrade instructions in that repository.
 
 Production 3.x deployments run two images, built and published from this repository:
 
-- `ghcr.io/os2display/display-api-service` — the php-fpm application
-- `ghcr.io/os2display/display-api-service-nginx` — nginx, serving static files and forwarding PHP requests
+- `ghcr.io/os2display/os2display` — the php-fpm application
+- `ghcr.io/os2display/os2display-nginx` — nginx, serving static files and forwarding PHP requests
 
 1. Point your compose stack at the images and reference the application config via `env_file:`:
 
    ```yaml
    services:
      api:
-       image: ghcr.io/os2display/display-api-service:<tag>
+       image: ghcr.io/os2display/os2display:<tag>
        env_file:
          - .env.local
    ```
@@ -177,14 +184,14 @@ Production 3.x deployments run two images, built and published from this reposit
      > replaced with an empty string and **nginx refuses to start** — the container restart-loops on
      > `invalid number of arguments in "limit_req_zone" directive`.
      >
-     > The official `os2display-api-service-nginx` image carries defaults, so it is unaffected. If you
+     > The official `ghcr.io/os2display/os2display-nginx` image carries defaults, so it is unaffected. If you
      > run a vanilla nginx image and supply the whole config surface through compose `environment:`,
      > add both variables before upgrading.
    - PHP-FPM: `PHP_MEMORY_LIMIT`, `PHP_MAX_EXECUTION_TIME`, `PHP_POST_MAX_SIZE`,
      `PHP_UPLOAD_MAX_FILESIZE`, `PHP_PM_*`, `PHP_OPCACHE_*` (consumed by the `itkdev/php8.4-fpm`
      base image).
    - ImageMagick: `MAGICK_MEMORY_LIMIT`, `MAGICK_MAP_LIMIT`, `MAGICK_DISK_LIMIT`,
-     `MAGICK_THREAD_LIMIT` (defaults in `infrastructure/display-api-service/Dockerfile`). See "Image
+     `MAGICK_THREAD_LIMIT` (defaults in `infrastructure/os2display/Dockerfile`). See "Image
      pixels and memory" in `README.md`.
 4. Screen client auto-upgrade: nothing to do. The images ship `release.json` both at the new
    location (site root) and at the deprecated `/client/release.json` path polled by 2.x clients, so
@@ -195,13 +202,13 @@ If you want a fully documented reference of every Symfony env variable the appli
 the image ships a self-documenting `.env`:
 
 ```shell
-docker run --rm ghcr.io/os2display/display-api-service:<tag> cat /var/www/html/.env
+docker run --rm ghcr.io/os2display/os2display:<tag> cat /var/www/html/.env
 ```
 
 ##### Option C: GitHub build artifacts, classic nginx setup
 
-Every release on <https://github.com/os2display/display-api-service/releases> ships a pre-built
-production tarball (`display-api-service-<version>.tar.gz` + `checksum.txt`): prod composer
+Every release on <https://github.com/os2display/os2display/releases> ships a pre-built
+production tarball (`os2display-<version>.tar.gz` + `checksum.txt`): prod composer
 dependencies and built frontend included, no Composer or Node needed on the host.
 
 Requirements: PHP 8.4 (fpm) with the extensions in [Hosting requirements](README.md#hosting-requirements)
@@ -211,7 +218,7 @@ Requirements: PHP 8.4 (fpm) with the extensions in [Hosting requirements](README
 
    ```shell
    sha256sum -c checksum.txt
-   mkdir -p /var/www/display && tar -xzf display-api-service-<version>.tar.gz -C /var/www/display
+   mkdir -p /var/www/display && tar -xzf os2display-<version>.tar.gz -C /var/www/display
    ```
 
    The archive has no top-level directory — its contents (`public/`, `src/`, `vendor/`, `.env`, …)
@@ -342,7 +349,7 @@ setups).
 
 #### Repository changes
 
-- All development happens in <https://github.com/os2display/display-api-service> — admin, client
+- All development happens in <https://github.com/os2display/os2display> — admin, client
   and templates code now lives in this repository (`assets/`).
 - The dev environment is docker compose based and wrapped by [Taskfile](README.md#taskfile); see
   [README — Development setup](README.md#development-setup) for getting started, the frontend dev

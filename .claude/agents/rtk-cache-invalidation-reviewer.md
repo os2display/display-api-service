@@ -5,7 +5,7 @@ tools: Glob, Grep, LS, Read, NotebookRead, Bash
 model: sonnet
 ---
 
-You are reviewing the RTK Query layer in display-api-service for cache invalidation coverage.
+You are reviewing the RTK Query layer in os2display for cache invalidation coverage.
 
 The split:
 

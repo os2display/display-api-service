@@ -1,6 +1,6 @@
 ---
 name: add-migration
-description: Create a Doctrine migration in display-api-service using the Schema tool API only (no raw SQL DDL). Use when the user asks to add a migration, change the database schema, add/remove a column, or follow up an entity change. Enforces ADR 010 and the PHPStan NoAddSqlInMigrationRule.
+description: Create a Doctrine migration in os2display using the Schema tool API only (no raw SQL DDL). Use when the user asks to add a migration, change the database schema, add/remove a column, or follow up an entity change. Enforces ADR 010 and the PHPStan NoAddSqlInMigrationRule.
 disable-model-invocation: true
 ---
 

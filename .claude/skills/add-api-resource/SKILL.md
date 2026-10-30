@@ -1,6 +1,6 @@
 ---
 name: add-api-resource
-description: Add a new API Platform resource to display-api-service end-to-end — entity, migration, DTO with #[ApiResource], state Provider+Processor, voter, OpenAPI regeneration, and RTK Query enhancement. Use when the user asks to expose a new resource at /v2/..., add a new API endpoint, or wire up a new entity for the Admin/Client to consume.
+description: Add a new API Platform resource to os2display end-to-end — entity, migration, DTO with #[ApiResource], state Provider+Processor, voter, OpenAPI regeneration, and RTK Query enhancement. Use when the user asks to expose a new resource at /v2/..., add a new API endpoint, or wire up a new entity for the Admin/Client to consume.
 disable-model-invocation: true
 ---
 

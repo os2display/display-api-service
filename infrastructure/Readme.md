@@ -4,8 +4,8 @@ This folder contains the infrastructure files for building the `os2display/*` im
 
 Two images are built:
 
-- `os2display/display-api-service`: The web (php-fpm) application image
-- `os2display/display-api-service-nginx`: The API (nginx) server image
+- `os2display/os2display`: The web (php-fpm) application image
+- `os2display/os2display-nginx`: The API (nginx) server image
 
 ## Github Actions
 
@@ -55,14 +55,14 @@ image as a `FROM` stage. The full pipeline:
    before exec'ing `CMD ["php-fpm"]`.
 
 4. **Push the API image.** `task images:push` (or the workflow) pushes the multi-arch manifest to
-   `ghcr.io/os2display/display-api-service:<tag>` *before* the nginx stage runs.
+   `ghcr.io/os2display/os2display:<tag>` *before* the nginx stage runs.
    *Why:* the nginx image's `FROM` references this published image — multi-arch manifests resolve per
    platform, so the arm64 nginx build copies arm64 contents and amd64 copies amd64 without QEMU re-execution
    of npm/composer.
 
-5. **Build and push the nginx image.** Layers on `ghcr.io/os2display/display-api-service:<tag>` as the `app`
+5. **Build and push the nginx image.** Layers on `ghcr.io/os2display/os2display:<tag>` as the `app`
    stage, `COPY`s `/app/public/` out of it, drops in the nginx config, and exposes a `/health`
-   endpoint. Pushed to `ghcr.io/os2display/display-api-service-nginx:<tag>`.
+   endpoint. Pushed to `ghcr.io/os2display/os2display-nginx:<tag>`.
 
 For local `task images:build`, steps 4 and 5 run against the local docker daemon instead of the registry —
 BuildKit reuses the locally-loaded API image for nginx's `FROM` without a network pull.

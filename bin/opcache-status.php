@@ -3,7 +3,7 @@
 // Read-only OPcache introspection, executed by an FPM worker so it sees the
 // pool's shared memory (CLI PHP has its own, separate OPcache). Invoked from
 // inside the container by the `opcache-status` wrapper (cgi-fcgi against the
-// pool); see infrastructure/display-api-service/opcache-status.
+// pool); see infrastructure/os2display/opcache-status.
 //
 // Web-served requests are refused: a webserver always passes REMOTE_ADDR,
 // while the cgi-fcgi exec path does not, so a webserver (mis)configuration

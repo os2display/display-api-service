@@ -1,6 +1,6 @@
 ---
 name: add-slide-template
-description: Add a new slide template to display-api-service — generate a ULID, create the .jsx + .json pair under assets/shared/templates/, wire the id()/config()/renderSlide() contract with slideDone() signalling, and decide between shipped-with-project vs custom-templates/ placement. Use when the user asks to add a new slide type, a new template, or extend the renderer with a new content layout.
+description: Add a new slide template to os2display — generate a ULID, create the .jsx + .json pair under assets/shared/templates/, wire the id()/config()/renderSlide() contract with slideDone() signalling, and decide between shipped-with-project vs custom-templates/ placement. Use when the user asks to add a new slide type, a new template, or extend the renderer with a new content layout.
 disable-model-invocation: true
 ---
 

@@ -96,7 +96,7 @@ test.describe("Test of admin fetch data hook", () => {
 
   test("Test of admin fetch data hook", async ({ page }) => {
     const title = page.locator("#add-slide-to-playlist-section tr");
-    // The max items per page is 30: https://github.com/os2display/display-api-service/blob/develop/config/packages/api_platform.yaml#L11
+    // The max items per page is 30: https://github.com/os2display/os2display/blob/develop/config/packages/api_platform.yaml#L11
     // And the header is also a <tr
     await expect(title).toHaveCount(32);
   });
