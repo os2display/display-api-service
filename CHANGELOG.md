@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-10-30
+
 ### Summary of 3.0
 
 The release candidate sections below list the details. Upgrading from 2.x is described in `UPGRADE.md`.
