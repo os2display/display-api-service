@@ -14,10 +14,10 @@ use App\Tests\AbstractBaseApiTestCase;
 class AuthenticationUserTest extends AbstractBaseApiTestCase
 {
     // .env.test:JWT_TOKEN_TTL=1800
-    final public const ENV_JWT_TOKEN_TTL = 1800;
+    final public const int ENV_JWT_TOKEN_TTL = 1800;
 
     // .env.test:JWT_REFRESH_TOKEN_TTL=3600
-    final public const ENV_JWT_REFRESH_TOKEN_TTL = 3600;
+    final public const int ENV_JWT_REFRESH_TOKEN_TTL = 3600;
 
     public function testLogin(): void
     {

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Entity\Traits;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait RelationsChecksumTrait
 {
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN, nullable: false)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private bool $changed = true;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: false, options: ['default' => '{}'])]
+    #[ORM\Column(type: Types::JSON, nullable: false, options: ['default' => '{}'])]
     private array $relationsChecksum = [];
 
     public function isChanged(): bool

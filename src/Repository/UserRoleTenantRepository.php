@@ -13,6 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method UserRoleTenant|null findOneBy(array $criteria, array $orderBy = null)
  * @method UserRoleTenant[]    findAll()
  * @method UserRoleTenant[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<UserRoleTenant>
  */
 class UserRoleTenantRepository extends ServiceEntityRepository
 {

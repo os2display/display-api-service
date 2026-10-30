@@ -15,6 +15,8 @@ use Symfony\Component\Uid\Ulid;
  * @method Feed|null findOneBy(array $criteria, array $orderBy = null)
  * @method Feed[]    findAll()
  * @method Feed[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<Feed>
  */
 class FeedRepository extends ServiceEntityRepository
 {

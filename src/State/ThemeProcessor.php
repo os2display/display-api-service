@@ -6,7 +6,6 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
-use App\Dto\ThemeInput;
 use App\Entity\Tenant\Theme;
 use App\Exceptions\DataTransformerException;
 use App\Repository\MediaRepository;
@@ -39,7 +38,8 @@ class ThemeProcessor extends AbstractProcessor
         empty($object->description) ?: $theme->setDescription($object->description);
         empty($object->createdBy) ?: $theme->setCreatedBy($object->createdBy);
         empty($object->modifiedBy) ?: $theme->setModifiedBy($object->modifiedBy);
-        empty($object->css) ?: $theme->setCssStyles($object->css);
+        // Left out keeps the css, as before; an explicit "" clears it.
+        null === $object->css ?: $theme->setCssStyles($object->css);
 
         $theme->removeLogo();
         if (!empty($object->logo)) {

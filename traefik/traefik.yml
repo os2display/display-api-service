@@ -1,0 +1,33 @@
+# Static traefik config for the bundled dev traefik (profile `traefik`).
+# Dev-only — no Let's Encrypt, no insecure dashboard. TLS certs come from
+# the file provider in dynamic.yml, served from /certs/ (bound to
+# ./traefik/ssl/ on the host; populate via `task dev:cert`).
+api:
+  dashboard: false
+  insecure: false
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        options: modern@file
+
+providers:
+  file:
+    directory: /config
+    watch: true
+  docker:
+    # Default endpoint /var/run/docker.sock — mounted read-only in compose.
+    exposedByDefault: false
+
+log:
+  level: INFO

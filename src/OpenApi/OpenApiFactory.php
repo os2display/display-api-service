@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace App\OpenApi;
 
 use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
-use ApiPlatform\OpenApi\Model;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Parameter;
+use ApiPlatform\OpenApi\Model\PathItem;
+use ApiPlatform\OpenApi\Model\Paths;
+use ApiPlatform\OpenApi\Model\RequestBody;
 use ApiPlatform\OpenApi\OpenApi;
 use App\Security\TenantScopedAuthenticator;
 use App\Utils\PathUtils;
@@ -156,8 +160,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
             ],
         ]);
 
-        $tokenPathItem = new Model\PathItem(
-            post: new Model\Operation(
+        $tokenPathItem = new PathItem(
+            post: new Operation(
                 operationId: 'postCredentialsItem',
                 tags: ['Authentication'],
                 responses: [
@@ -173,7 +177,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                     ],
                 ],
                 summary: 'Get JWT token to login from local user.',
-                requestBody: new Model\RequestBody(
+                requestBody: new RequestBody(
                     description: 'Generate new JWT Token',
                     content: new \ArrayObject([
                         'application/json' => [
@@ -187,8 +191,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
         );
         $openApi->getPaths()->addPath('/v2/authentication/token', $tokenPathItem);
 
-        $refreshTokenPathItem = new Model\PathItem(
-            post: new Model\Operation(
+        $refreshTokenPathItem = new PathItem(
+            post: new Operation(
                 operationId: 'postRefreshTokenItem',
                 tags: ['Authentication'],
                 responses: [
@@ -204,7 +208,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                     ],
                 ],
                 summary: 'Get JWT token from refresh token.',
-                requestBody: new Model\RequestBody(
+                requestBody: new RequestBody(
                     description: 'Refresh JWT Token',
                     content: new \ArrayObject([
                         'application/json' => [
@@ -218,8 +222,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
         );
         $openApi->getPaths()->addPath('/v2/authentication/token/refresh', $refreshTokenPathItem);
 
-        $oidcUrlsPathItem = new Model\PathItem(
-            get: new Model\Operation(
+        $oidcUrlsPathItem = new PathItem(
+            get: new Operation(
                 operationId: 'getOidcAuthUrlsItem',
                 tags: ['Authentication'],
                 responses: [
@@ -251,8 +255,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
         );
         $openApi->getPaths()->addPath('/v2/authentication/oidc/urls', $oidcUrlsPathItem);
 
-        $oidcTokenPathItem = new Model\PathItem(
-            get: new Model\Operation(
+        $oidcTokenPathItem = new PathItem(
+            get: new Operation(
                 operationId: 'getOidcAuthTokenItem',
                 tags: ['Authentication'],
                 responses: [
@@ -312,8 +316,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
             'type' => 'object',
         ]);
 
-        $screenPathItem = new Model\PathItem(
-            post: new Model\Operation(
+        $screenPathItem = new PathItem(
+            post: new Operation(
                 operationId: 'postLoginInfoScreen',
                 tags: ['Authentication'],
                 responses: [
@@ -329,7 +333,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                     ],
                 ],
                 summary: 'Get login info for a screen.',
-                requestBody: new Model\RequestBody(
+                requestBody: new RequestBody(
                     description: 'Get login info with JWT token for given nonce',
                     content: new \ArrayObject([
                         'application/json' => [
@@ -352,8 +356,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
             ],
         ]);
 
-        $screenBindItem = new Model\PathItem(
-            post: new Model\Operation(
+        $screenBindItem = new PathItem(
+            post: new Operation(
                 operationId: 'postScreenBindKey',
                 tags: ['Screens'],
                 responses: [
@@ -363,7 +367,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ],
                 summary: 'Bind screen with BindKey',
                 parameters: [
-                    new Model\Parameter(
+                    new Parameter(
                         name: 'id',
                         in: 'path',
                         description: 'The screen id',
@@ -374,7 +378,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                         ],
                     ),
                 ],
-                requestBody: new Model\RequestBody(
+                requestBody: new RequestBody(
                     description: 'Bind the screen with the bind key',
                     content: new \ArrayObject([
                         'application/json' => [
@@ -388,8 +392,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
         );
         $openApi->getPaths()->addPath('/v2/screens/{id}/bind', $screenBindItem);
 
-        $screenUnbindItem = new Model\PathItem(
-            post: new Model\Operation(
+        $screenUnbindItem = new PathItem(
+            post: new Operation(
                 operationId: 'postScreenUnbind',
                 tags: ['Screens'],
                 responses: [
@@ -399,7 +403,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ],
                 summary: 'Unbind screen from machine',
                 parameters: [
-                    new Model\Parameter(
+                    new Parameter(
                         name: 'id',
                         in: 'path',
                         description: 'The screen id',
@@ -410,7 +414,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                         ],
                     ),
                 ],
-                requestBody: new Model\RequestBody(
+                requestBody: new RequestBody(
                     description: 'Unbind from machine',
                     content: new \ArrayObject(),
                 ),
@@ -431,7 +435,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
 
         $paths = $openApi->getPaths()->getPaths();
 
-        $filteredPaths = new Model\Paths();
+        $filteredPaths = new Paths();
         foreach ($paths as $path => $pathItem) {
             if (in_array(str_replace($this->utils->getApiPlatformPathPrefix(), '', $path), $exclude)) {
                 continue;

@@ -1,0 +1,58 @@
+[
+  { "name": "empty", "css": "", "error": null },
+  {
+    "name": "scoped rule",
+    "css": "#SLIDE_ID .text { color: red; }",
+    "error": null
+  },
+  {
+    "name": "native nesting",
+    "css": "#SLIDE_ID { .text { color: red; } & .box { padding: 1rem; } }",
+    "error": null
+  },
+  {
+    "name": "braces and comment markers in strings",
+    "css": "#SLIDE_ID .a::after { content: \"} /* {\"; }",
+    "error": null
+  },
+  {
+    "name": "braces in a comment",
+    "css": "/* { */ #SLIDE_ID { color: red; }",
+    "error": null
+  },
+  {
+    "name": "constructs browsers no longer support",
+    "css": "#SLIDE_ID { background: url(\"java/**/script:x\"); width: expression(1); }",
+    "error": null
+  },
+  {
+    "name": "unterminated comment",
+    "css": "/* note\n#SLIDE_ID { color: red; }",
+    "error": "unterminated_comment"
+  },
+  {
+    "name": "unterminated string",
+    "css": "#SLIDE_ID .a::after { content: \"abc; }",
+    "error": "unterminated_string"
+  },
+  {
+    "name": "extra closing brace",
+    "css": "#SLIDE_ID { color: red; } }",
+    "error": "unexpected_brace"
+  },
+  {
+    "name": "stray closing brace with matching totals",
+    "css": "#SLIDE_ID { } } #SLIDE_ID .x { }",
+    "error": "unexpected_brace"
+  },
+  {
+    "name": "closing brace before opening",
+    "css": "} #SLIDE_ID {",
+    "error": "unexpected_brace"
+  },
+  {
+    "name": "missing closing brace",
+    "css": "#SLIDE_ID { .text { color: red; }",
+    "error": "unclosed_brace"
+  }
+]

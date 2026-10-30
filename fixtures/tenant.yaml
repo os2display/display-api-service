@@ -4,14 +4,14 @@ App\Entity\Tenant:
     description: <sentence(5)>
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
-    id: '<ulid($createdAt)>'
+    id: "<ulid($createdAt)>"
 
   tenant_abc (extends tenant):
-    tenantKey (unique): 'ABC'
-    title (unique): 'ABC Tenant'
+    tenantKey (unique): "ABC"
+    title (unique): "ABC Tenant"
   tenant_def (extends tenant):
-    tenantKey (unique): 'DEF'
-    title (unique): 'DEF Tenant'
+    tenantKey (unique): "DEF"
+    title (unique): "DEF Tenant"
   tenant_xyz (extends tenant):
-    tenantKey (unique): 'XYZ'
-    title (unique): 'XYC Tenant'
+    tenantKey (unique): "XYZ"
+    title (unique): "XYC Tenant"
