@@ -42,7 +42,7 @@ When reporting, include:
 ## Scope
 
 This policy applies to security issues in this repository
-(`os2display/display-api-service`) and related deployment/runtime concerns that
+(`os2display/os2display`) and related deployment/runtime concerns that
 materially affect the security of supported OS2Display installations.
 
 ## Response goals

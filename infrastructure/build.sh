@@ -33,9 +33,9 @@ docker buildx build \
   --build-arg APP_VERSION="${APP_VERSION}" \
   --build-arg APP_RELEASE_TIMESTAMP="${RELEASE_TIMESTAMP}" \
   --build-arg APP_RELEASE_TIME="${RELEASE_TIME}" \
-  --tag "${REGISTRY}/display-api-service:${APP_VERSION}" \
-  --file infrastructure/display-api-service/Dockerfile \
-  infrastructure/display-api-service
+  --tag "${REGISTRY}/os2display:${APP_VERSION}" \
+  --file infrastructure/os2display/Dockerfile \
+  infrastructure/os2display
 
 # Nginx image layers on the just-built API image (single source of truth for
 # public/), so it has no builder stages of its own. With --push the FROM
@@ -46,7 +46,7 @@ docker buildx build \
   ${PLATFORMS} \
   ${NGINX_PULL} ${OUTPUT} \
   --build-arg APP_VERSION="${APP_VERSION}" \
-  --build-arg APP_IMAGE="${REGISTRY}/display-api-service" \
-  --tag "${REGISTRY}/display-api-service-nginx:${APP_VERSION}" \
+  --build-arg APP_IMAGE="${REGISTRY}/os2display" \
+  --tag "${REGISTRY}/os2display-nginx:${APP_VERSION}" \
   --file infrastructure/nginx/Dockerfile \
   infrastructure/nginx

@@ -1,11 +1,11 @@
 ---
 name: api-resource-reviewer
-description: Use this agent to review a new or modified API Platform resource in display-api-service. Cross-checks entity, migration, DTO operations, Provider/Processor wiring, voter coverage, OpenAPI regeneration, and RTK Query enhancement against the project's conventions. Invoke after creating/changing anything under src/Dto/, src/State/, src/Security/Voter/, src/Entity/Tenant/, or migrations/. Returns a structured punch list of what's missing.
+description: Use this agent to review a new or modified API Platform resource in os2display. Cross-checks entity, migration, DTO operations, Provider/Processor wiring, voter coverage, OpenAPI regeneration, and RTK Query enhancement against the project's conventions. Invoke after creating/changing anything under src/Dto/, src/State/, src/Security/Voter/, src/Entity/Tenant/, or migrations/. Returns a structured punch list of what's missing.
 tools: Glob, Grep, LS, Read, NotebookRead, Bash
 model: sonnet
 ---
 
-You are reviewing an API Platform resource change in display-api-service (Symfony 6.4 + API Platform 3.x + Doctrine + MariaDB). Your job is to confirm the full resource bundle is consistent before the PR opens.
+You are reviewing an API Platform resource change in os2display (Symfony 6.4 + API Platform 3.x + Doctrine + MariaDB). Your job is to confirm the full resource bundle is consistent before the PR opens.
 
 The project splits responsibilities deliberately:
 

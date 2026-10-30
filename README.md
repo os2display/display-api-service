@@ -103,7 +103,7 @@ Architectural decisions are recorded in `docs/adr`.
 
 We use [SemVer](http://semver.org/) for versioning.
 For the versions available, see the
-[tags on this repository](https://github.com/os2display/display-api-service/tags).
+[tags on this repository](https://github.com/os2display/os2display/tags).
 
 ## Technologies
 
@@ -265,7 +265,7 @@ checked-out repository) must provide:
 - PHP 8.4 (fpm) with the extensions listed under `require` in `composer.json` (`ext-*`), including **imagick**
   with ImageMagick 6 or 7 and its JPEG, PNG, WebP and GIF support. Composer refuses to install without them.
 - An ImageMagick security policy that only allows those formats, such as
-  [`imagemagick-policy.xml`](infrastructure/display-api-service/imagemagick-policy.xml) from the application
+  [`imagemagick-policy.xml`](infrastructure/os2display/imagemagick-policy.xml) from the application
   image. Without it, ImageMagick's readers for SVG, MVG, MSL, text and URLs can be abused through crafted
   uploads to read files or fetch URLs on the server.
 - A PHP `memory_limit` of at least `128M`, the application image's default. Resizing does not raise it: a 50
@@ -278,8 +278,8 @@ checked-out repository) must provide:
 
 Production deployments run two images:
 
-- `ghcr.io/os2display/display-api-service` — the php-fpm application
-- `ghcr.io/os2display/display-api-service-nginx` — the nginx reverse-proxy serving static files and forwarding
+- `ghcr.io/os2display/os2display` — the php-fpm application
+- `ghcr.io/os2display/os2display-nginx` — the nginx reverse-proxy serving static files and forwarding
   PHP requests
 
 Both are built and published from this repository. See [`infrastructure/Readme.md`](infrastructure/Readme.md)
@@ -1308,5 +1308,5 @@ OS2Display is released under the [Mozilla Public License 2.0](LICENSE).
 ## Contributing
 
 Bug reports and pull requests are tracked on
-[GitHub](https://github.com/os2display/display-api-service/issues). See
+[GitHub](https://github.com/os2display/os2display/issues). See
 [Coding standards](#coding-standards) for the checks a PR must pass.

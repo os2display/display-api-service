@@ -1,5 +1,5 @@
 ARG APP_VERSION="develop"
-ARG APP_IMAGE="ghcr.io/os2display/display-api-service"
+ARG APP_IMAGE="ghcr.io/os2display/os2display"
 
 # Pull the API image that was built and pushed in the preceding step.
 # Multi-arch manifests resolve per platform, so the arm64 nginx build
@@ -18,7 +18,7 @@ FROM nginx/nginx-unprivileged:alpine
 # because metadata-action's --label flags win over Dockerfile LABELs.
 LABEL org.opencontainers.image.authors="ITK Dev <itkdev@ba.aarhus.dk>" \
       org.opencontainers.image.vendor="OS2Display" \
-      org.opencontainers.image.documentation="https://github.com/os2display/display-api-service#readme" \
+      org.opencontainers.image.documentation="https://github.com/os2display/os2display#readme" \
       org.opencontainers.image.base.name="nginx/nginx-unprivileged:alpine"
 
 ARG UID=101

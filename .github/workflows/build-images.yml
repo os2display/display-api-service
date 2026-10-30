@@ -52,7 +52,7 @@ jobs:
         id: meta-api
         uses: docker/metadata-action@v6
         with:
-          images: ghcr.io/os2display/display-api-service
+          images: ghcr.io/os2display/os2display
           tags: |
             # develop branch → 'develop'
             type=ref,event=branch
@@ -70,8 +70,8 @@ jobs:
       - name: Build and push (API)
         uses: docker/build-push-action@v7
         with:
-          context: ./infrastructure/display-api-service/
-          file: ./infrastructure/display-api-service/Dockerfile
+          context: ./infrastructure/os2display/
+          file: ./infrastructure/os2display/Dockerfile
           build-contexts: |
             repository-root=.
           # Use the version computed by docker/metadata-action so APP_VERSION
@@ -90,18 +90,18 @@ jobs:
           # mode=max caches builder stages (client_app_builder, api_app_builder),
           # which is what makes multi-arch builds practical to cache at all.
           # Scoped per image so API and Nginx caches don't evict each other.
-          cache-from: type=gha,scope=display-api-service
-          cache-to: type=gha,mode=max,scope=display-api-service
+          cache-from: type=gha,scope=os2display
+          cache-to: type=gha,mode=max,scope=os2display
 
       - name: Docker meta (Nginx)
         id: meta-nginx
         uses: docker/metadata-action@v6
         with:
-          images: ghcr.io/os2display/display-api-service-nginx
+          images: ghcr.io/os2display/os2display-nginx
           # Override the source-repo defaults; without this the Nginx image
-          # would publish title/description copied from display-api-service.
+          # would publish title/description copied from os2display.
           labels: |
-            org.opencontainers.image.title=display-api-service-nginx
+            org.opencontainers.image.title=os2display-nginx
             org.opencontainers.image.description=Nginx reverse proxy fronting the OS2Display API image
           tags: |
             # develop branch → 'develop'
@@ -132,5 +132,5 @@ jobs:
           provenance: mode=max
           sbom: true
           platforms: linux/amd64,linux/arm64
-          cache-from: type=gha,scope=display-api-service-nginx
-          cache-to: type=gha,mode=max,scope=display-api-service-nginx
+          cache-from: type=gha,scope=os2display-nginx
+          cache-to: type=gha,mode=max,scope=os2display-nginx

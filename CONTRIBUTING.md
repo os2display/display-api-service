@@ -10,8 +10,8 @@ creating an issue only requires a free GitHub account. Before submitting,
 please first check whether it already exists in the repository
 issue list:
 
-- Existing issues: <https://github.com/os2display/display-api-service/issues>
-- Create a new issue: <https://github.com/os2display/display-api-service/issues/new/choose>
+- Existing issues: <https://github.com/os2display/os2display/issues>
+- Create a new issue: <https://github.com/os2display/os2display/issues/new/choose>
 
 ## Security Issues
 

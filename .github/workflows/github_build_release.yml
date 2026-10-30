@@ -95,13 +95,15 @@ jobs:
         run: |
           mkdir -p ../assets
 
+      # The archive name is hard-coded rather than taken from the repository name,
+      # as on the 2.x lines, so it does not depend on when the repository is renamed.
       - name: Create archive
         run: |
           tar \
-            -zcf ../assets/${{ github.event.repository.name }}-${{ github.ref_name }}.tar.gz ./*
+            -zcf ../assets/os2display-${{ github.ref_name }}.tar.gz ./*
 
       - name: Create checksum
-        run: sha256sum ../assets/${{ github.event.repository.name }}-${{ github.ref_name }}.tar.gz > ../assets/checksum.txt
+        run: sha256sum ../assets/os2display-${{ github.ref_name }}.tar.gz > ../assets/checksum.txt
 
       # Mirror docker/metadata-action's 'latest=auto' rule used by build-images.yml:
       # any semver tag with a pre-release identifier ('3.0.0-RC1', '3.0.0-beta')

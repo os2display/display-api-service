@@ -10,6 +10,8 @@ The release candidate sections below list the details. Upgrading from 2.x is des
 
 - Gathered the API, Admin, Screen client and Templates repositories into one application. One stack
   serves the API, `/admin` and `/client`; the separate admin and client containers are gone.
+- Renamed the repository from `os2display/display-api-service` to `os2display/os2display`, along with
+  the images, the release tarball and the Composer package.
 - Bundled the templates with the code and removed remote-components. External 2.x templates must be
   converted to custom templates.
 - Moved all configuration to environment variables. The admin and client `config.json` files are gone
@@ -41,6 +43,10 @@ The release candidate sections below list the details. Upgrading from 2.x is des
 
 ### Changes
 
+- Renamed the repository to `os2display/os2display` (#454). The images are published as
+  `ghcr.io/os2display/os2display` and `ghcr.io/os2display/os2display-nginx`, the release tarball is
+  named `os2display-<version>.tar.gz`, the Composer package is `os2display/os2display` and the image
+  build files moved to `infrastructure/os2display/`. The 2.x images on Docker Hub keep their names.
 - Merged fixes from 2.8.3–2.8.4 into release/3.0.0.
 - Improved project documentation on governance, contribution workflows, security reporting, and contributor acknowledgements.
 - Added ADRs 012 and 013 defining governance boundaries, contribution requirements, and

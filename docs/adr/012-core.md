@@ -8,7 +8,7 @@ Proposal
 
 ## Context
 
-Historically, all code in `os2display-api-service` has been treated as core and
+Historically, all code in `os2display/os2display` has been treated as core and
 therefore subject to long-term shared maintenance by the OS2Display community.
 In practice, this means every integrated feature is expected to remain secure,
 stable, and generally usable across deployments by all member organizations.
@@ -28,7 +28,7 @@ must be read together with ADR 013, which defines the plugin-like zones.
 
 ## Decision
 
-Core is defined as all code in `os2display-api-service`, except for the paths
+Core is defined as all code in `os2display/os2display`, except for the paths
 explicitly designated as plugin-like zones in ADR 013.
 
 Core scope also includes the hosting and deployment baseline maintained in

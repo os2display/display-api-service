@@ -5,7 +5,7 @@ tools: Glob, Grep, LS, Read, NotebookRead, Bash
 model: sonnet
 ---
 
-You are reviewing a new or modified FeedType in display-api-service.
+You are reviewing a new or modified FeedType in os2display.
 
 A FeedType lives in `src/Feed/`, implements `App\Feed\FeedTypeInterface`, and gets auto-tagged into `FeedService` via `_instanceof` in `config/services.yaml`. The most common bugs are subtle — silent caching of empty results, mismatched output shapes, missing test registration. Your job is to catch those before the PR opens.
 

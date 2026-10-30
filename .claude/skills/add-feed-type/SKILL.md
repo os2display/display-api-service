@@ -1,6 +1,6 @@
 ---
 name: add-feed-type
-description: Add a new FeedType to display-api-service — a PHP class implementing App\Feed\FeedTypeInterface that pulls data from an external source, normalizes it into one of the shared output models (RSS/CALENDAR/INSTAGRAM/POSTER/BRND_BOOKING), and describes its own admin form and configuration. Use when the user asks to add a new feed source, integrate an external API into the slide-feed system, or extend the renderer with a new feed shape.
+description: Add a new FeedType to os2display — a PHP class implementing App\Feed\FeedTypeInterface that pulls data from an external source, normalizes it into one of the shared output models (RSS/CALENDAR/INSTAGRAM/POSTER/BRND_BOOKING), and describes its own admin form and configuration. Use when the user asks to add a new feed source, integrate an external API into the slide-feed system, or extend the renderer with a new feed shape.
 disable-model-invocation: true
 ---
 

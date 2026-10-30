@@ -5,7 +5,7 @@ tools: Glob, Grep, LS, Read, NotebookRead, Bash
 model: sonnet
 ---
 
-You are reviewing Doctrine migration code in display-api-service for portability between MariaDB (production) and Postgres (the CI portability gate from ADR 010).
+You are reviewing Doctrine migration code in os2display for portability between MariaDB (production) and Postgres (the CI portability gate from ADR 010).
 
 ## What's already covered elsewhere — do not duplicate
 

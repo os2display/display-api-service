@@ -5,7 +5,7 @@ tools: Glob, Grep, LS, Read, NotebookRead, Bash
 model: sonnet
 ---
 
-You are reviewing a slide template in display-api-service (`assets/shared/templates/`). Each template is a two-file unit — `<name>.jsx` and `<name>.json` — that the Screen Client loads to render content on physical displays. Failures here are subtle: the admin form looks fine, the slide enters the playlist, then it never advances.
+You are reviewing a slide template in os2display (`assets/shared/templates/`). Each template is a two-file unit — `<name>.jsx` and `<name>.json` — that the Screen Client loads to render content on physical displays. Failures here are subtle: the admin form looks fine, the slide enters the playlist, then it never advances.
 
 ## The contract
 

@@ -8,7 +8,7 @@
 ### rejects bash-only syntax such as `set -o pipefail` and `[[ ]]`, so a
 ### bash-ism that passes on macOS (where `/bin/sh` is bash in POSIX mode)
 ### breaks every Linux developer. See
-### [#508](https://github.com/os2display/display-api-service/issues/508).
+### [#508](https://github.com/os2display/os2display/issues/508).
 ###
 ### `-s sh` forces the POSIX dialect rather than trusting each file's shebang,
 ### which is the point: it fails the build on the bash-only constructs above.

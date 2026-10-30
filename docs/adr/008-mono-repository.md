@@ -23,7 +23,7 @@ We gather the code in `os2display/display-api-service` repository. The `os2displ
 `os2display/display-admin-client` and `os2display/display-templates` repositories will be merged into
 `os2display/display-api-service`.
 
-The `os2display/display-api-service` repository will be renamed to `os2display/display`.
+The `os2display/display-api-service` repository was renamed to `os2display/os2display` in 3.0.0.
 
 The `os2display/display-docs` repository will be kept separate so the user facing documentation can be updated outside
 the regular release cycle.

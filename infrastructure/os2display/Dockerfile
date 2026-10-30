@@ -156,7 +156,7 @@ FROM php_imagick
 # four below are not emitted by that action and have to live here.
 LABEL org.opencontainers.image.authors="ITK Dev <itkdev@ba.aarhus.dk>" \
       org.opencontainers.image.vendor="OS2Display" \
-      org.opencontainers.image.documentation="https://github.com/os2display/display-api-service#readme" \
+      org.opencontainers.image.documentation="https://github.com/os2display/os2display#readme" \
       org.opencontainers.image.base.name="itkdev/php8.4-fpm:alpine"
 
 # OPcache values follow the Symfony performance checklist
