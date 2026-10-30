@@ -41,6 +41,7 @@ The release candidate sections below list the details. Upgrading from 2.x is des
 
 ### Changes
 
+- Merged fixes from 2.8.3–2.8.4 into release/3.0.0.
 - Improved project documentation on governance, contribution workflows, security reporting, and contributor acknowledgements.
 - Added ADRs 012 and 013 defining governance boundaries, contribution requirements, and
   maintenance expectations for core and plugin-like zones.
