@@ -21,7 +21,8 @@ The release candidate sections below list the details. Upgrading from 2.x is des
 - Made the cache backend configurable, so Redis is optional, and moved sessions to Redis by default.
 - Made the screen client keep its last good content when the API is slow, throttled or failing, retry
   with backoff, and stop caching partly failed pulls. Screens send fewer requests and pull every 10
-  minutes by default (30 seconds in 2.x); campaigns start and end on a pull.
+  minutes by default (30 seconds in 2.x), configurable with `CLIENT_PULL_STRATEGY_INTERVAL`; campaigns
+  start and end on a pull.
 - Made screens show image variants scaled to the screen, and fixed video playback, cross-fades and the
   fallback image when there is no content.
 - Replaced the rich text editor (Quill) with Tiptap.
