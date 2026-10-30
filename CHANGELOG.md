@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fixed the template contribution guide in the README naming `os2display/display` instead of `os2display/os2display`.
+
 ## [3.0.0] - 2026-10-30
 
 ### Summary of 3.0
