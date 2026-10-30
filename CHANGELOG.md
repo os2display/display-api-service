@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#636](https://github.com/os2display/display-api-service/pull/636)
+  - Hard-coded the release archive name to `display-api-service-<tag>.tar.gz` instead of deriving it from the
+    repository name, so 2.x release assets keep their name after the repository is renamed.
+
 ## [2.8.4] - 2026-10-26
 
 - [#626](https://github.com/os2display/display-api-service/pull/626)

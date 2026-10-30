@@ -29,13 +29,15 @@ jobs:
         run: |
           mkdir -p ../assets
 
+      # The archive name is hard-coded rather than taken from the repository name,
+      # so 2.x release assets keep the display-api-service name after the repo rename.
       - name: Create archive
         run: |
           tar \
-            -zcf ../assets/${{ github.event.repository.name }}-${{ github.ref_name }}.tar.gz ./*
+            -zcf ../assets/display-api-service-${{ github.ref_name }}.tar.gz ./*
 
       - name: Create checksum
-        run: sha256sum ../assets/${{ github.event.repository.name }}-${{ github.ref_name }}.tar.gz > ../assets/checksum.txt
+        run: sha256sum ../assets/display-api-service-${{ github.ref_name }}.tar.gz > ../assets/checksum.txt
 
       - name: Create a release in GitHub and uploads assets
         run: |
