@@ -1220,7 +1220,7 @@
     "client-secret": "Client Secret",
     "values-info": "Værdierne findes på app-registreringen i Azure-portalen under \"Overview\" (Directory (tenant) ID og Application (client) ID) og \"Certificates & secrets\" (Client Secret — brug selve værdien, ikke Secret ID). App-registreringen skal have application-rettighederne Place.Read.All og Calendars.Read med administratorsamtykke.",
     "locations": "Lokationer (lokalelister)",
-    "locations-help": "Vælg de lokalelister, lokalerne skal hentes fra. Vælges ingen, er alle tenantens lokaler tilgængelige.",
+    "locations-help": "Vælg de lokalelister, som lokalerne skal hentes fra. Hvis listen er tom, skyldes det, at der ikke er oprettet lokalelister i jeres Microsoft 365. I så fald er alle tenantens lokaler tilgængelige.",
     "redacted-value-input-placeholder": "Skjult værdi",
     "save-before-locations-can-be-set": "Bemærk! Datakilden skal gemmes før der kan tilkobles lokationer. Gem og åbn datakilden igen."
   },
