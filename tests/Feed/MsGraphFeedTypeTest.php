@@ -313,6 +313,23 @@ class MsGraphFeedTypeTest extends TestCase
         $this->assertSame($next, $requests[2]);
     }
 
+    public function testRoomListMembersUseDocumentedEndpoint(): void
+    {
+        $http = new MockHttpClient(static function (string $method, string $url): MockResponse {
+            if ('POST' === $method) {
+                return new MockResponse('{"access_token":"test-token","expires_in":3600}');
+            }
+
+            self::assertSame('/v1.0/places/building%40example.com/microsoft.graph.roomlist/rooms', parse_url($url, PHP_URL_PATH));
+
+            return new MockResponse('{"value":[{"emailAddress":"room@example.com","displayName":"Room"}]}');
+        });
+
+        $rooms = (new ApiClient($http, new ArrayAdapter()))->getRooms($this->createFeedSource(), 'building@example.com');
+
+        $this->assertSame('building@example.com', $rooms['room@example.com']->locationId);
+    }
+
     public function testRoomDiscoveryFailsRatherThanReturningTruncatedResults(): void
     {
         $http = new MockHttpClient(static fn (string $method): MockResponse => new MockResponse(
